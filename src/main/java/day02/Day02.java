@@ -23,7 +23,7 @@ public class Day02 {
     }
 
     static boolean containsCombination(String input, int timesItShouldExist) {
-        // single boxID comes in
+        // A single boxID comes in
         // check letter by letter - so we need to split it up
         // count the letters & check if it is only occurring twice
 
