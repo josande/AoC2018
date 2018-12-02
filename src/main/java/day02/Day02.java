@@ -26,6 +26,7 @@ public class Day02 {
         // single boxID comes in
         // check letter by letter - so we need to split it up
         // count the letters & check if it is only occurring twice
+
         String remainingString = input;
         while(remainingString.length() > 0) {
             char firstLetter = remainingString.charAt(0);
