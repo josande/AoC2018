@@ -28,20 +28,15 @@ public class Day01 {
                 if (visitedFrequencies.contains(currentFrequency)) {
                     // stop & return the currentFrequency
                     return currentFrequency;
-
                 } else {
                     visitedFrequencies.add(currentFrequency);
                 }
-
             }
         }
-
     }
 
-
-
     static ArrayList<Integer> getFrequenciesFromString(String input) {
-         String[] frequencyArray = input.split(", ");
+        String[] frequencyArray = input.split(", ");
         ArrayList<Integer> frequencies =  new ArrayList<>();
         for (String frequencyString : frequencyArray) {
             int frequencyInt = Integer.valueOf(frequencyString);
