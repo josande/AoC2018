@@ -70,7 +70,65 @@ class Day02Test {
 
     }
 
+    @Test
+    void testIsMatch_Matches() {
+        String inputA = "fghij";
+        String inputB = "fguij";
+        assertTrue(isMatch(inputA,inputB));
+        assertTrue(isMatch(inputB,inputA));
+    }
 
+    @Test
+    void testIsMatch_NoMatch() {
+        String inputA = "abcde";
+        String inputB = "axcye";
+        assertFalse(isMatch(inputA,inputB));
+        assertFalse(isMatch(inputB,inputA));
+    }
+    @Test
+    void testIsMatch_ExactMatch() {
+        String inputA = "abcde";
+        String inputB = "abcde";
+        assertFalse(isMatch(inputA,inputB));
+        assertFalse(isMatch(inputB,inputA));
+    }
+
+    @Test
+    void testFindCommonLetters() {
+        String inputA = "fghij";
+        String inputB = "fguij";
+        assertEquals("fgij",findCommonLetters(inputA,inputB));
+    }
+
+    @Test
+    void testFindCommonLettersTwo() {
+        String inputA = "ABBA";
+        String inputB = "ABCD";
+        assertEquals("AB",findCommonLetters(inputA,inputB));
+    }
+
+
+    @Test
+    void testExampleOnePartTwo() {
+        String input = "abcde\n" +
+                "fghij\n" +
+                "klmno\n" +
+                "pqrst\n" +
+                "fguij\n" +
+                "axcye\n" +
+                "wvxyz";
+        assertEquals("fgij",findCommonBoxIDs(input));
+    }
+    @Test
+    void testExampleOneMatchesAreAtTheEnd() {
+        String input = "abcde\n" +
+                "klmno\n" +
+                "pqrst\n" +
+                "axcye\n" +
+                "fghij\n" +
+                "fguij";
+        assertEquals("fgij",findCommonBoxIDs(input));
+    }
     @Test
     void puzzle() {
         String input="ymdrcyapvwfloiuktanxzjsieb\n" +
@@ -324,6 +382,6 @@ class Day02Test {
                 "ymdrcarpvwfloiuktapxzjsqeb\n" +
                 "ymdrchgpvwfloiuktanxzjcqvs";
         System.out.println("Day02(a): " +getChecksum(input));
-        System.out.println("Day02(b): ");
+        System.out.println("Day02(b): "+ findCommonBoxIDs(input));
     }
 }

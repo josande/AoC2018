@@ -43,4 +43,45 @@ public class Day02 {
         return false;
     }
 
+    static boolean isMatch(String inputA, String inputB) {
+        int numberOfDifferences = 0;
+        for(int position = 0; position<inputA.length(); position++) {
+            if (inputA.charAt(position) != inputB.charAt(position)) {
+                numberOfDifferences++;
+
+                if (numberOfDifferences > 1) {
+                    return false;
+                }
+            }
+        }
+
+        return numberOfDifferences == 1;
+    }
+
+    static String findCommonLetters(String inputA, String inputB) {
+        String commonLetters = "";
+        for(int position = 0; position<inputA.length(); position++) {
+            if (inputA.charAt(position) == inputB.charAt(position)) {
+                commonLetters += inputA.charAt(position);
+            }
+        }
+        return commonLetters;
+    }
+
+    static String findCommonBoxIDs(String input) {
+        String[] boxIDs = input.split("\n");
+
+        for(int position = 0; position<boxIDs.length-1; position++) {
+            String currentBoxID = boxIDs[position];
+            for(int otherPosition = position+1; otherPosition<boxIDs.length; otherPosition++) {
+                String otherBoXID = boxIDs[otherPosition];
+                boolean match = isMatch(currentBoxID, otherBoXID);
+                if(match) {
+                    return findCommonLetters(currentBoxID, otherBoXID);
+                }
+            }
+        }
+        return null;
+    }
+
 }
