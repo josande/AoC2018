@@ -6,7 +6,7 @@ public class Day04 {
 
 
 
-    static int getIDGuardSleepCombination(String input) {
+    static int getGuardIdSleepCombination(String input) {
 
 
         ArrayList<String[]> sleepSchedule = makeSleepSchedule(input);
@@ -19,15 +19,9 @@ public class Day04 {
 
 
     static int getMostLikelyGuardMinuteCombination(String input) {
-
-
         ArrayList<String[]> sleepSchedule = makeSleepSchedule(input);
-
-
         //return the multiplication guardID * minute most asleep
         List<Integer> guardIds = getAllGuardIds(sleepSchedule);
-
-
         return  getMostLikelyMinuteToSleepMultipliedByGuardId(sleepSchedule, guardIds);
     }
 
@@ -52,7 +46,7 @@ public class Day04 {
 
         for (ArrayList<String> day : allDays) {
             String[] rowData = new String[62];
-            boolean isSleeping = false;
+        //    boolean isSleeping = false;
             int fellAsleepAt = 0;
 
             for(int position=2; position < rowData.length; position++) {
@@ -63,28 +57,26 @@ public class Day04 {
                 String[] wordByWord = event.replace("[", "").replace("]", "").split(" ");
 
                 if (wordByWord[2].equals("Guard")) { // Guard falls asleep
-
-                    rowData[0] = getDate(wordByWord[0], wordByWord[1]);
+                    rowData[0] = "-";
                     rowData[1] = wordByWord[3].replaceAll("#", ""); //guard Id
-
                 } else if (wordByWord[2].equals("falls")) { // Guard falls asleep
                     fellAsleepAt = Integer.valueOf(wordByWord[1].split(":")[1]);
-                    isSleeping = true;
+      //              isSleeping = true;
                 } else { //Guard wakes up
                     int wokeUpAt = Integer.valueOf(wordByWord[1].split(":")[1]);
-
                     for (int position = fellAsleepAt + 2; position < wokeUpAt + 2; position++) {
                         rowData[position] = "#";
                     }
-                    isSleeping = false;
+    //                isSleeping = false;
                 }
             }
-            if (isSleeping) {  //Check if guard still sleeping at days end
+/*            if (isSleeping) {  //Check if guard still sleeping at days end
+                System.out.println("Sleeping at the end!");
                 int wokeUpAt = 59;
                 for (int position = fellAsleepAt + 2; position < wokeUpAt + 2; position++) {
                     rowData[position] = "#";
                 }
-            }
+            }*/
             sleepSchedule.add(rowData);
         }
         return sleepSchedule;

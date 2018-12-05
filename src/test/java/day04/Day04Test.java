@@ -29,7 +29,7 @@ class Day04Test {
                 "[1518-11-05 00:03] Guard #99 begins shift\n" +
                 "[1518-11-05 00:45] falls asleep\n" +
                 "[1518-11-05 00:55] wakes up";
-        Assertions.assertEquals(240,getIDGuardSleepCombination(input));
+        Assertions.assertEquals(240, getGuardIdSleepCombination(input));
         Assertions.assertEquals(4455,getMostLikelyGuardMinuteCombination(input));
 
         ;
@@ -49,7 +49,7 @@ class Day04Test {
                 "[1518-11-05 00:03] Guard #99 begins shift\n" +
                 "[1518-11-05 00:45] falls asleep\n" +
                 "[1518-11-05 00:55] wakes up";
-        Assertions.assertEquals(99*45,getIDGuardSleepCombination(input));
+        Assertions.assertEquals(99*45, getGuardIdSleepCombination(input));
 
         ;
     }
@@ -1227,7 +1227,7 @@ class Day04Test {
                 "[1518-08-06 00:13] wakes up\n" +
                 "[1518-08-21 23:50] Guard #3323 begins shift\n" +
                 "[1518-10-11 23:57] Guard #911 begins shift";
-        System.out.println("Day04(a): "+getIDGuardSleepCombination(input));
-        System.out.println("Day04(b): "+getMostLikelyGuardMinuteCombination(input));
+        System.out.println("Day04(a): " + getGuardIdSleepCombination(input));
+        System.out.println("Day04(b): " + getMostLikelyGuardMinuteCombination(input));
     }
 }
