@@ -17,7 +17,7 @@ public class Day06 {
         void addToArea(int i) {
             area+=i;
         }
-        void setIsNexTToWall(boolean state) {
+        void setIsNextToWall(boolean state) {
             isNextToWall =state;
         }
         boolean isNextToWall() {return isNextToWall;}
@@ -38,7 +38,7 @@ public class Day06 {
         }
         return coordinates;
     }
-    static int findClosestCoordinate(int x, int y, List<Coordinate> coordinates) {
+    static int setUpRegions(int x, int y, List<Coordinate> coordinates) {
         int closestDistance = 999;
         int closestPoint = -1;
 
@@ -56,7 +56,7 @@ public class Day06 {
         if (closestPoint>=0) {
             coordinates.get(closestPoint).addToArea(1);
             if (x == 0 || x == 399 || y == 0 || y == 399) {
-                coordinates.get(closestPoint).setIsNexTToWall(true);
+                coordinates.get(closestPoint).setIsNextToWall(true);
             }
         }
         return closestPoint;
@@ -73,15 +73,14 @@ public class Day06 {
     static int largestFiniteArea(String input) {
         ArrayList<Coordinate> locations = splitInput(input);
         int size=400;
-        int grid[][] = new int[size][size];
         for (int x=0;x<size; x++) {
             for (int y = 0; y < size; y++) {
-                grid[x][y] = findClosestCoordinate(x, y, locations);
+                setUpRegions(x, y, locations);
             }
         }
         int largestArea=0;
         for (Coordinate c : locations) {
-            if (!c.isNextToWall) {
+            if (!c.isNextToWall()) {
                 largestArea=Math.max(largestArea, c.getArea());
             }
         }
@@ -93,7 +92,7 @@ public class Day06 {
         int regionSize=0;
         int size=400;
 
-        for (int x=0;x < size; x++) {
+        for (int x=0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 if (totalDistance(x, y, locations) < distanceLimit) {
                     regionSize++;

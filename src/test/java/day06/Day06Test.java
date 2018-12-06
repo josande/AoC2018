@@ -83,6 +83,6 @@ class Day06Test {
                 "262, 268\n" +
                 "40, 60";
         System.out.println("Day06(a): "+largestFiniteArea(input));
-        System.out.println("Day06(b): "+regionWithTotalDistanceLessThan(input,10000)); //40134
+        System.out.println("Day06(b): "+regionWithTotalDistanceLessThan(input,10000)); //40134 //too high
     }
 }
