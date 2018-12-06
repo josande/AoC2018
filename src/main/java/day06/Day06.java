@@ -2,6 +2,7 @@ package day06;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Day06 {
     static class Coordinate {
@@ -78,13 +79,12 @@ public class Day06 {
                 setUpRegions(x, y, locations);
             }
         }
-        int largestArea=0;
-        for (Coordinate c : locations) {
-            if (!c.isNextToWall()) {
-                largestArea=Math.max(largestArea, c.getArea());
-            }
-        }
-        return largestArea;
+        return locations.stream()
+                .filter(c -> !c.isNextToWall())
+                .mapToInt(Coordinate::getArea)
+                .max()
+                .orElseThrow(NoSuchElementException::new);
+
     }
 
     static int regionWithTotalDistanceLessThan(String input, int distanceLimit) {
