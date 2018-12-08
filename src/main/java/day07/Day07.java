@@ -4,9 +4,9 @@ import javafx.util.Pair;
 
 import java.util.*;
 
-public class Day07 {
+class Day07 {
     static private HashMap<Character, String> makeWorkOrder(String input) {
-        String[] instructions=input.split("\n");
+        String[] instructions=input.split("\r?\n");
         HashMap<Character, String> toDoList=new HashMap<>();
         for (String instruction : instructions) {
             Character dependsOn = instruction.charAt(5);
@@ -22,31 +22,31 @@ public class Day07 {
         }
         return toDoList;
     }
-    static String  findBuildOrder(String input) {
+    static String solveA(String input) {
 
         HashMap<Character, String> toDoList = makeWorkOrder(input);
-        String result = "";
+        StringBuilder result = new StringBuilder();
         while(!toDoList.isEmpty()) {
             for (Map.Entry<Character, String> entry : toDoList.entrySet()) {
                 if (entry.getValue().isEmpty()) {
-                    result += entry.getKey();
+                    result.append(entry.getKey());
                     removeDependencies(toDoList, entry.getKey());
                     toDoList.remove(entry.getKey());
                     break;
                 }
             }
         }
-        return result;
+        return result.toString();
 
     }
 
 
-    static int findShortestTime(String input, int baseTimEToSolve, int numberOfWorkers) {
+    static int solveB(String input, int baseTimEToSolve, int numberOfWorkers) {
         HashMap<Character, String> toDoList = makeWorkOrder(input);
 
         Pair<Character, Integer>[] elves = new Pair[numberOfWorkers];
         for (int e = 0; e < elves.length; e++) {
-            elves[e] = new Pair(' ',0);
+            elves[e] = new Pair<>(' ',0);
         }
 
 
@@ -55,7 +55,7 @@ public class Day07 {
                 if (elves[e].getValue() == time) {
                     toDoList = removeDependencies(toDoList, elves[e].getKey());
                     toDoList.remove(elves[e].getKey());
-                    elves[e] = new Pair(' ', 0);
+                    elves[e] = new Pair<>(' ', 0);
                 }
             }
             handOutNewJobs(toDoList, elves, time, baseTimEToSolve);
@@ -72,7 +72,7 @@ public class Day07 {
             }
         }
         // Remove jobs worked on
-        for (Pair elf : elves) {
+        for (Pair<Character, Integer> elf : elves) {
             unlockedTasks.remove(elf.getKey());
         }
         // If there is job to be done and elves with free hands, put them to work
@@ -80,7 +80,7 @@ public class Day07 {
             int tasksAssigned = 0;
             for (int e = 0; e < elves.length; e++) {
                 if (elves[e].getValue() == 0 && unlockedTasks.size() > tasksAssigned) {
-                    elves[e] = new Pair(unlockedTasks.get(tasksAssigned), currentTime + baseTimEToSolve + unlockedTasks.get(tasksAssigned++) - 64);
+                    elves[e] = new Pair<>(unlockedTasks.get(tasksAssigned), currentTime + baseTimEToSolve + unlockedTasks.get(tasksAssigned++) - 64);
                 }
             }
         }

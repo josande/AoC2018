@@ -1,119 +1,100 @@
 package day03;
 
-public class Day03 {
+import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+class Day03 {
 
 
     //This solves A
-    static int getOverlappingFabric(String input) {
+    static int solveA(String input) {
 
         //string into an array
-        String[] inputRows = input.split("\n");
+        String[] inputRows = input.replaceAll(":","")
+                                  .replaceAll("#", "")
+                                  .split("\r?\n");
 
         //Create a 2D array with integers
-        String[][] fabric = new String[1000][1000];
-
-        for(int x=0;x<1000;x++) {
-            for(int y=0;y<1000;y++) {
-                fabric[x][y] = ".";
-            }
-        }
-
-
-        fillFabricPattern(fabric, inputRows);
-
+        HashMap<Pair<Integer, Integer>, Integer> fabric = new HashMap<>();
 
         //check how many inches are covered by X
-        return numberOfOccurencies(fabric, "X");
+        return findOverlap(fabric, inputRows);
     }
-    private static String[][] fillFabricPattern(String[][] fabric, String[] inputRows) {
+    private static int findOverlap(HashMap<Pair<Integer, Integer>, Integer> fabric, String[] inputRows) {
+        int overlap = 0;
         for(String row : inputRows) {
+            String[] rowParts = row.split(" ");
+
             //split: starting position left, starting position top, total covered
-            String startPositions = row.split(" ")[2];
-            startPositions= startPositions.replaceAll(":", "");
-            int startLeft = Integer.valueOf(startPositions.split(",")[0]);
-            int startTop = Integer.valueOf(startPositions.split(",")[1]);
+            String[] startPositions = rowParts[2].split(",");
+            int startLeft = Integer.valueOf(startPositions[0]);
+            int startTop = Integer.valueOf(startPositions[1]);
 
-            String area = row.split(" ")[3];
-            int width = Integer.valueOf(area.split("x")[0]);
-            int heigth = Integer.valueOf(area.split("x")[1]);
 
-            String id = row.split(" ")[0];
-            id = id.replaceAll("#", "");
-            int patternID = Integer.valueOf(id);
+            int width = Integer.valueOf(rowParts[3].split("x")[0]);
+            int height = Integer.valueOf(rowParts[3].split("x")[1]);
 
-            //SetFabric() set the id to covered area, if covered already, set X
+
+            //SetFabric() set the id to covered area, if covered already, set -1
             for (int xCoordinate = startLeft; xCoordinate < startLeft + width; xCoordinate++) {
-                for (int yCoordinate = startTop; yCoordinate < startTop + heigth; yCoordinate++) {
-                    if (fabric[xCoordinate][yCoordinate].equals(".")) {
-                        fabric[xCoordinate][yCoordinate] = "" + patternID;
-                    } else if (fabric[xCoordinate][yCoordinate].equals("X")) {
-
-                    } else {
-                        fabric[xCoordinate][yCoordinate] = "X";
+                for (int yCoordinate = startTop; yCoordinate < startTop + height; yCoordinate++) {
+                    Pair<Integer, Integer> p = new Pair<>(xCoordinate, yCoordinate);
+                    if (!fabric.containsKey(p)) {
+                        fabric.put(p,1);
+                    } else if (fabric.get(p) > 0) {
+                        fabric.put(p,-1);
+                        overlap++;
                     }
                 }
             }
         }
-        return fabric;
+        return overlap;
     }
 //    /Part Two
-static int getNonOverlappingFabric(String input) {
-
+static int solveB(String input) {
     //string into an array
-    String[] inputRows = input.split("\n");
+    String[] inputRows = input.replaceAll(":","")
+                              .replaceAll("#", "")
+                              .split("\r?\n");
 
     //Create a 2D array with integers
-    String[][] fabric = new String[1000][1000];
+    HashMap<Pair<Integer, Integer>, Integer> fabric = new HashMap<>();
 
-    for(int x=0;x<1000;x++) {
-        for(int y=0;y<1000;y++) {
-            fabric[x][y] = ".";
-        }
-    }
-
-
-    fillFabricPattern(fabric, inputRows);
-
-
-    for(String row : inputRows) {
-        String area = row.split(" ")[3];
-        int width = Integer.valueOf(area.split("x")[0]);
-        int heigth = Integer.valueOf(area.split("x")[1]);
-        int totalAreaOriginal = width * heigth;
-
-        String id = row.split(" ")[0];
-        id = id.replaceAll("#", "");
-        int patternID = Integer.valueOf(id);
-
-        if(numberOfOccurencies(fabric,""+patternID) == totalAreaOriginal) {
-            return patternID;
-        }
-    }
-
-     return -1;
+    return findNonOverlappingPattern(fabric, inputRows);
 }
+    private static int findNonOverlappingPattern(HashMap<Pair<Integer, Integer>, Integer> fabric, String[] inputRows) {
+        Set<Integer> nonOverlappingPatterns = new HashSet<>();
+        for(String row : inputRows) {
+            String[] rowParts = row.split(" ");
+
+            //split: starting position left, starting position top, total covered
+            String[] startPositions = rowParts[2].split(",");
+            int startLeft = Integer.valueOf(startPositions[0]);
+            int startTop = Integer.valueOf(startPositions[1]);
 
 
+            int width = Integer.valueOf(rowParts[3].split("x")[0]);
+            int height = Integer.valueOf(rowParts[3].split("x")[1]);
+            int patternID = Integer.valueOf(rowParts[0]);
 
+            nonOverlappingPatterns.add(patternID);
 
-    private static int numberOfOccurencies(String[][] fabric, String pattern) {
-        int numberOfTimes = 0;
-        for(int x = 0; x < 1000;x++) {
-            for (int y = 0; y < 1000; y++) {
-                if (fabric[x][y].equals(pattern))
-                    numberOfTimes++;
+            for (int xCoordinate = startLeft; xCoordinate < startLeft + width; xCoordinate++) {
+                for (int yCoordinate = startTop; yCoordinate < startTop + height; yCoordinate++) {
+                    Pair<Integer, Integer> p = new Pair<>(xCoordinate, yCoordinate);
+                    if (!fabric.containsKey(p)) {
+                        fabric.put(p,patternID);
+                    } else {
+                        nonOverlappingPatterns.remove(fabric.get(p));
+                        nonOverlappingPatterns.remove(patternID);
+                        fabric.put(p,-1);
+                    }
+                }
             }
         }
-        return numberOfTimes;
+        return (Integer) nonOverlappingPatterns.toArray()[0];
     }
-
-    private static void printItOut(String[][] fabric) {
-        for (int y = 0; y < 50; y++) {
-            for (int x = 0; x < 50; x++) {
-                System.out.print(fabric[x][y]);
-            }
-            System.out.print("\n");
-        }
-    }
-// #1 @ 1,3: 4x4
 }

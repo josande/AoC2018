@@ -1,29 +1,29 @@
 package day01;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Day01 {
+class Day01 {
 
-    static int getFrequency(String input) {
-        int startFrequency = 0;
-        int currentFrequency = startFrequency;
-        ArrayList<Integer> changingFrequencies = getFrequenciesFromString(input);
+    static int solveA(String input, String splitOn) {
+        int currentFrequency = 0;
+        ArrayList<Integer> changingFrequencies = getFrequenciesFromString(input, splitOn);
         for(int frequencyInt : changingFrequencies) {
             currentFrequency = currentFrequency + frequencyInt;
         }
         return currentFrequency;
     }
 
-    static int getFirstRepeatedFrequency(String input) {
-        int startFrequency = 0;
-        int currentFrequency = startFrequency;
-        ArrayList<Integer> visitedFrequencies = new ArrayList<>();
+    static int solveB(String input, String splitOn) {
+        int currentFrequency = 0;
+        Set<Integer> visitedFrequencies = new HashSet<>();
         visitedFrequencies.add(currentFrequency);
-        ArrayList<Integer> changingFrequencies = getFrequenciesFromString(input);
+        ArrayList<Integer> changingFrequencies = getFrequenciesFromString(input, splitOn);
 
         while(true) {
             for(int frequencyInt : changingFrequencies) {
-                currentFrequency = currentFrequency + frequencyInt;
+                currentFrequency += frequencyInt;
                 // check if the value is in list already
                 if (visitedFrequencies.contains(currentFrequency)) {
                     // stop & return the currentFrequency
@@ -35,8 +35,8 @@ public class Day01 {
         }
     }
 
-    static ArrayList<Integer> getFrequenciesFromString(String input) {
-        String[] frequencyArray = input.split(", ");
+    static ArrayList<Integer> getFrequenciesFromString(String input, String splitOn) {
+        String[] frequencyArray = input.split(splitOn);
         ArrayList<Integer> frequencies =  new ArrayList<>();
         for (String frequencyString : frequencyArray) {
             int frequencyInt = Integer.valueOf(frequencyString);

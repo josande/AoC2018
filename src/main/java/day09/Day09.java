@@ -1,4 +1,11 @@
 package day09;
 
-public class Day09 {
+class Day09 {
+    static String solveA(String input) {
+        return "";
+    }
+
+    static String solveB(String input) {
+        return "";
+    }
 }

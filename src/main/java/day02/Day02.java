@@ -1,9 +1,9 @@
 package day02;
 
 
-public class Day02 {
+class Day02 {
 
-    static int getChecksum(String input) {
+    static int solveA(String input) {
         String[] boxIDs = input.split("\n");
         int numberOfPairs = 0;
         int numberOfTriples = 0;
@@ -59,16 +59,16 @@ public class Day02 {
     }
 
     static String findCommonLetters(String inputA, String inputB) {
-        String commonLetters = "";
+        StringBuilder commonLetters = new StringBuilder();
         for(int position = 0; position<inputA.length(); position++) {
             if (inputA.charAt(position) == inputB.charAt(position)) {
-                commonLetters += inputA.charAt(position);
+                commonLetters.append(inputA.charAt(position));
             }
         }
-        return commonLetters;
+        return commonLetters.toString();
     }
 
-    static String findCommonBoxIDs(String input) {
+    static String solveB(String input) {
         String[] boxIDs = input.split("\n");
 
         for(int position = 0; position<boxIDs.length-1; position++) {

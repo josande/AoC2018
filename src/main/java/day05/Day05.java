@@ -1,6 +1,6 @@
 package day05;
 
-public class Day05 {
+class Day05 {
 
 
     static int getRemainingUnitsLength(String input) {

@@ -1,16 +1,29 @@
 package day13;
 
 import org.junit.jupiter.api.Test;
+import utils.Utils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static day13.Day13.solveA;
+import static day13.Day13.solveB;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Day13Test {
 
     @Test
-    void puzzle() {
-        String input="";
-        System.out.println("Day13(a): ");
-        System.out.println("Day13(b): ");
+    void example_A() {
+        String input = "";
+        assertEquals("", solveA(input));
     }
-
+    @Test
+    void example_B() {
+        String input = "";
+        assertEquals("", solveB(input));
+    }
+    @Test
+    void puzzle() {
+        String day = "13";
+        String input = new Utils().readFile("Day" + day + "Input.txt");
+        System.out.println("Day" + day + "(a): " + solveA(input));
+        System.out.println("Day" + day + "(b): " + solveB(input));
+    }
 }

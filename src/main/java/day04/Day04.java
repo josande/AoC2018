@@ -2,7 +2,7 @@ package day04;
 
 import java.util.*;
 
-public class Day04 {
+class Day04 {
 
 
 
@@ -27,8 +27,7 @@ public class Day04 {
 
     static ArrayList<String[]> makeSleepSchedule(String input) {
         ArrayList<String[]> sleepSchedule = new ArrayList<>();
-        ArrayList<String> rows = new ArrayList();
-        rows.addAll(Arrays.asList(input.split("\n")));
+        ArrayList<String> rows = new ArrayList(Arrays.asList(input.split("\r?\n")));
         Collections.sort(rows);
 
 
@@ -46,7 +45,6 @@ public class Day04 {
 
         for (ArrayList<String> day : allDays) {
             String[] rowData = new String[62];
-        //    boolean isSleeping = false;
             int fellAsleepAt = 0;
 
             for(int position=2; position < rowData.length; position++) {
@@ -56,27 +54,23 @@ public class Day04 {
             for (String event : day) {
                 String[] wordByWord = event.replace("[", "").replace("]", "").split(" ");
 
-                if (wordByWord[2].equals("Guard")) { // Guard falls asleep
-                    rowData[0] = "-";
-                    rowData[1] = wordByWord[3].replaceAll("#", ""); //guard Id
-                } else if (wordByWord[2].equals("falls")) { // Guard falls asleep
-                    fellAsleepAt = Integer.valueOf(wordByWord[1].split(":")[1]);
-      //              isSleeping = true;
-                } else { //Guard wakes up
-                    int wokeUpAt = Integer.valueOf(wordByWord[1].split(":")[1]);
-                    for (int position = fellAsleepAt + 2; position < wokeUpAt + 2; position++) {
-                        rowData[position] = "#";
-                    }
-    //                isSleeping = false;
+                switch (wordByWord[2]) {
+                    case "Guard":  // Guard falls asleep
+                        rowData[0] = "-";
+                        rowData[1] = wordByWord[3].replaceAll("#", ""); //guard Id
+
+                        break;
+                    case "falls":  // Guard falls asleep
+                        fellAsleepAt = Integer.valueOf(wordByWord[1].split(":")[1]);
+                        break;
+                    default:  //Guard wakes up
+                        int wokeUpAt = Integer.valueOf(wordByWord[1].split(":")[1]);
+                        for (int position = fellAsleepAt + 2; position < wokeUpAt + 2; position++) {
+                            rowData[position] = "#";
+                        }
+                        break;
                 }
             }
-/*            if (isSleeping) {  //Check if guard still sleeping at days end
-                System.out.println("Sleeping at the end!");
-                int wokeUpAt = 59;
-                for (int position = fellAsleepAt + 2; position < wokeUpAt + 2; position++) {
-                    rowData[position] = "#";
-                }
-            }*/
             sleepSchedule.add(rowData);
         }
         return sleepSchedule;
@@ -234,16 +228,4 @@ public class Day04 {
 
         return guardIdWhoSleptTheMost * mostCommonSleepTimeForAnyGuard;
     }
-
-    static void printSleepArray(ArrayList<String[]> sleepSchedule) {
-        System.out.println("*** Sleepschedule: ***");
-        for(String[] row : sleepSchedule) {
-            for (String word : row) {
-                System.out.print(word+" ");
-            }
-            System.out.print("\n");
-        }
-        System.out.println("***  ***");
-    }
-
 }

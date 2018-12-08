@@ -45,10 +45,10 @@ class Day08 {
         int metaDataPosts = inputsRemaining.get(0);
         inputsRemaining.remove(0);
 
-        for (int c=0; c<childNodes; c++) {
+        for (int c=0; c < childNodes; c++) {
             currentNode.addChild(getNode(inputsRemaining));
         }
-        for (int m=0;m<metaDataPosts;m++) {
+        for (int m=0; m < metaDataPosts; m++) {
             currentNode.addMetadata(inputsRemaining.get(0));
             inputsRemaining.remove(0);
         }
