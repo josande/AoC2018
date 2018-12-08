@@ -1,17 +1,17 @@
 package day08;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Day08 {
+class Day08 {
 
     static class Node {
         private List<Integer> metadata = new ArrayList<>();
         private List<Node> children = new ArrayList<>();
 
-        Node() {
-            allNodes.add(this);
-        }
         private void addChild(Node node) {
             children.add(node);
         }
@@ -29,32 +29,27 @@ public class Day08 {
         }
     }
 
-    static List<Integer> inputRemaining = new ArrayList<>();
-    static List<Node> allNodes = new ArrayList<>();
-
-    static List<Node> getNodes(String input) {
-        inputRemaining = new ArrayList<>();
-        allNodes = new ArrayList<>();
-        //List<Integer> values = Stream.of(input.split(" ")).mapToInt(Integer::valueOf).collect(Collectors.toList());
-        for (String v : input.split(" ")) {
-            inputRemaining.add(Integer.valueOf(v));
-        }
-
-        makeNode();
-
+    private static List<Node> getAllNodes(String input) {
+        LinkedList<Integer> inputRemaining = Arrays.stream(input.split(" "))
+                                             .mapToInt(Integer::valueOf)
+                                             .boxed()
+                                             .collect(Collectors.toCollection(LinkedList::new));
+        List<Node> allNodes = new ArrayList<>();
+        extendListWithNodes(inputRemaining,allNodes);
         return allNodes;
     }
 
 
 
-    private static Node makeNode () {
+    private static Node extendListWithNodes(List<Integer> inputRemaining, List<Node> allNodes) {
         Node currentNode = new Node();
+        allNodes.add(currentNode);
         int childNodes = inputRemaining.get(0);
         int metaDataPosts = inputRemaining.get(1);
         inputRemaining.remove(0);
         inputRemaining.remove(0);
         for (int c=0; c<childNodes; c++) {
-            currentNode.addChild(makeNode());
+            currentNode.addChild(extendListWithNodes(inputRemaining, allNodes));
         }
         for (int m=0;m<metaDataPosts;m++) {
             currentNode.addMetadata(inputRemaining.get(0));
@@ -63,34 +58,25 @@ public class Day08 {
         return currentNode;
     }
     static int solveA(String input) {
-        getNodes(input);
-        return allNodes.stream()
+
+        return getAllNodes(input).stream()
                        .mapToInt(Node::getSumOfMetadata)
                        .sum();
 
     }
     static int solveB(String input) {
-        getNodes(input);
-        return getRecursiveMetaValue(allNodes.get(0));
-
+        return getRecursiveMetaValue(getAllNodes(input).get(0));
     }
 
     static private int getRecursiveMetaValue(Node node) {
         if (node.getChildren().isEmpty()) {
             return node.getSumOfMetadata();
         }
-        int metaValue=0;
-        for (int i=0; i<node.getMetadata().size(); i++) {
-            int metaDataValue = node.getMetadata().get(i);
-            if (metaDataValue == 0)
-                continue;
-            if (metaDataValue <= node.getChildren().size()) {
-                metaValue+=getRecursiveMetaValue(node
-                                                 .getChildren()
-                                                 .get(metaDataValue-1));
-            }
-        }
-        return metaValue;
+        return node.getMetadata().stream()
+                                 .filter(m -> m > 0)
+                                 .filter(m -> m <= node.getChildren().size())
+                                 .mapToInt(m -> getRecursiveMetaValue(node.getChildren().get(m-1)))
+                                 .sum();
     }
 
 }
