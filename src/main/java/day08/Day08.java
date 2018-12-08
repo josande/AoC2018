@@ -11,7 +11,6 @@ class Day08 {
     static class Node {
         private List<Integer> metadata = new ArrayList<>();
         private List<Node> children = new ArrayList<>();
-
         private void addChild(Node node) {
             children.add(node);
         }
@@ -25,57 +24,59 @@ class Day08 {
             return metadata;
         }
         int getSumOfMetadata() {
-            return metadata.stream().mapToInt(Integer::intValue).sum();
+            return metadata.stream()
+                           .mapToInt(Integer::intValue)
+                           .sum();
         }
     }
 
-    private static List<Node> getAllNodes(String input) {
-        LinkedList<Integer> inputRemaining = Arrays.stream(input.split(" "))
-                                             .mapToInt(Integer::valueOf)
-                                             .boxed()
-                                             .collect(Collectors.toCollection(LinkedList::new));
-        List<Node> allNodes = new ArrayList<>();
-        extendListWithNodes(inputRemaining,allNodes);
-        return allNodes;
+    private static Node getBaseNode(String input) {
+        LinkedList<Integer> inputsRemaining = Arrays.stream(input.split(" "))
+                                                    .mapToInt(Integer::valueOf)
+                                                    .boxed()
+                                                    .collect(Collectors.toCollection(LinkedList::new));
+        return getNode(inputsRemaining);
     }
 
-
-
-    private static Node extendListWithNodes(List<Integer> inputRemaining, List<Node> allNodes) {
+    private static Node getNode(List<Integer> inputsRemaining) {
         Node currentNode = new Node();
-        allNodes.add(currentNode);
-        int childNodes = inputRemaining.get(0);
-        int metaDataPosts = inputRemaining.get(1);
-        inputRemaining.remove(0);
-        inputRemaining.remove(0);
+        int childNodes = inputsRemaining.get(0);
+        inputsRemaining.remove(0);
+        int metaDataPosts = inputsRemaining.get(0);
+        inputsRemaining.remove(0);
+
         for (int c=0; c<childNodes; c++) {
-            currentNode.addChild(extendListWithNodes(inputRemaining, allNodes));
+            currentNode.addChild(getNode(inputsRemaining));
         }
         for (int m=0;m<metaDataPosts;m++) {
-            currentNode.addMetadata(inputRemaining.get(0));
-            inputRemaining.remove(0);
+            currentNode.addMetadata(inputsRemaining.get(0));
+            inputsRemaining.remove(0);
         }
         return currentNode;
     }
     static int solveA(String input) {
+        return getRecursiveMetaDataValue(getBaseNode(input));
+    }
 
-        return getAllNodes(input).stream()
-                       .mapToInt(Node::getSumOfMetadata)
-                       .sum();
-
+    static private int getRecursiveMetaDataValue(Node node) {
+        return  node.getSumOfMetadata() +
+                node.getChildren().stream()
+                                  .mapToInt(Day08::getRecursiveMetaDataValue)
+                                  .sum();
     }
     static int solveB(String input) {
-        return getRecursiveMetaValue(getAllNodes(input).get(0));
+        return getRecursiveMetaDataValueUsingMetaReferences(getBaseNode(input));
     }
 
-    static private int getRecursiveMetaValue(Node node) {
+    static private int getRecursiveMetaDataValueUsingMetaReferences(Node node) {
         if (node.getChildren().isEmpty()) {
             return node.getSumOfMetadata();
         }
         return node.getMetadata().stream()
                                  .filter(m -> m > 0)
                                  .filter(m -> m <= node.getChildren().size())
-                                 .mapToInt(m -> getRecursiveMetaValue(node.getChildren().get(m-1)))
+                                 .mapToInt(m -> getRecursiveMetaDataValueUsingMetaReferences(node.getChildren()
+                                                                                                 .get(m-1)))
                                  .sum();
     }
 
