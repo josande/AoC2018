@@ -17,25 +17,36 @@ class Day10 {
     }
 
     private static int findMin(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements) {
-        int sizeX=-1;
+        int size=-1;
 
         for (int time=0; ; time++) {
-                int maxX=getMaxX(coordinates, movements, time);
-                int minX=getMinX(coordinates, movements, time);
+            int maxY = 0;
+            int minY = Integer.MAX_VALUE;
 
-                if (( sizeX<0 || Math.abs(maxX-minX) < sizeX )){
-                    sizeX=Math.abs(maxX-minX);
-                } else {
-                    return time-1;
-                }
+            for (int star = 0; star < coordinates.size(); star++) {
+                maxY = Math.max(maxY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
+                minY = Math.min(minY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
+            }
+
+            if ( size < 0 || Math.abs(maxY-minY) < size ) {
+                size=Math.abs(maxY-minY);
+            } else {
+                return time-1;
+            }
         }
     }
 
     private static void print(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements, int time) {
-        int minX=getMinX(coordinates, movements, time);
-        int minY=getMinY(coordinates, movements, time);
-        int maxX=getMaxX(coordinates, movements, time);
-        int maxY=getMaxY(coordinates, movements, time);
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxX = 0;
+        int maxY = 0;
+        for (int star = 0; star < coordinates.size(); star++) {
+            minX = Math.min(minX, coordinates.get(star).getKey() + movements.get(star).getKey() * time);
+            minY = Math.min(minY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
+            maxX = Math.max(maxX, coordinates.get(star).getKey() + movements.get(star).getKey() * time);
+            maxY = Math.max(maxY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
+        }
         Character[][] plot = new Character[maxX-minX+2][maxY-minY+2];
 
         for (int x = 0; x<=maxX-minX+1; x++) {
@@ -55,35 +66,6 @@ class Day10 {
 
             System.out.print("\n");
         }
-    }
-
-    private static int getMinX(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements, int time) {
-        int minX = 9999999;
-        for (int star = 0; star < coordinates.size(); star++) {
-            minX = Math.min(minX, coordinates.get(star).getKey() + movements.get(star).getKey() * time);
-        }
-        return minX;
-    }
-    private static int getMinY(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements, int time) {
-        int minY = 9999999;
-        for (int star = 0; star < coordinates.size(); star++) {
-            minY = Math.min(minY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
-        }
-        return minY;
-    }
-    private static int getMaxX(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements, int time) {
-        int maxX = 0;
-        for (int star = 0; star < coordinates.size(); star++) {
-            maxX = Math.max(maxX, coordinates.get(star).getKey() + movements.get(star).getKey() * time);
-        }
-        return maxX;
-    }
-    private static int getMaxY(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements, int time) {
-        int maxY = 0;
-        for (int star = 0; star < coordinates.size(); star++) {
-            maxY = Math.max(maxY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
-        }
-        return maxY;
     }
 
      static int solveB(String input) {
