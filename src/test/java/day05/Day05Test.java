@@ -10,12 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Day05Test {
 
     @Test
-    public void exampleOne() {
+    void exampleOne() {
         String input ="dabAcCaCBAcCcaDA";
         assertEquals(10, getRemainingUnitsLength(input));
+
     }
     @Test
-    public void exampleTwo() {
+    void exampleTwo() {
         String input="dabAcCaCBAcCcaDA";
         assertEquals(4, getBestReducedPolymerLength(input));
 
