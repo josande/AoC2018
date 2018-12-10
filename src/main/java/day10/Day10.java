@@ -10,13 +10,12 @@ class Day10 {
         String[] rows = splitInput(input);
 
         Pair<List<Pair<Integer, Integer>>,List<Pair<Integer, Integer>>> starPositionMovement = getStarsPositionAndMovement(rows);
-
-        int relevantTime= findMin(starPositionMovement.getKey(), starPositionMovement.getValue());
-        print(starPositionMovement.getKey(), starPositionMovement.getValue(), relevantTime);
+        int time = findTime(starPositionMovement.getKey(), starPositionMovement.getValue());
+        print(starPositionMovement.getKey(), starPositionMovement.getValue(), time);
         return "";
     }
 
-    private static int findMin(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements) {
+    private static int findTime(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements) {
         int size=-1;
 
         for (int time=0; ; time++) {
@@ -41,29 +40,21 @@ class Day10 {
         int minY = Integer.MAX_VALUE;
         int maxX = 0;
         int maxY = 0;
+        ArrayList<Pair<Integer, Integer>> finalPositions = new ArrayList<>();
         for (int star = 0; star < coordinates.size(); star++) {
-            minX = Math.min(minX, coordinates.get(star).getKey() + movements.get(star).getKey() * time);
-            minY = Math.min(minY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
-            maxX = Math.max(maxX, coordinates.get(star).getKey() + movements.get(star).getKey() * time);
-            maxY = Math.max(maxY, coordinates.get(star).getValue() + movements.get(star).getValue() * time);
+            int x= coordinates.get(star).getKey() + movements.get(star).getKey() * time;
+            int y=coordinates.get(star).getValue() + movements.get(star).getValue() * time;
+            finalPositions.add(new Pair<>(x,y));
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
         }
-        Character[][] plot = new Character[maxX-minX+2][maxY-minY+2];
 
-        for (int x = 0; x<=maxX-minX+1; x++) {
-            for (int y = 0; y <= maxY-minY+1; y++) {
-                plot[x][y] = ' ';
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = minX; x<=maxX; x++) {
+                System.out.print(finalPositions.contains(new Pair<>(x,y))?"#":" ");
             }
-        }
-        for (int star = 0; star < coordinates.size(); star++) {
-            int x = coordinates.get(star).getKey() + movements.get(star).getKey() * time;
-            int y = coordinates.get(star).getValue() + movements.get(star).getValue() * time;
-            plot[x-minX][y-minY] = '#';
-        }
-            for (int y = 0; y <= maxY-minY; y++) {
-                for (int x = 0; x<=maxX-minX; x++) {
-                    System.out.print(plot[x][y]);
-                }
-
             System.out.print("\n");
         }
     }
@@ -71,7 +62,7 @@ class Day10 {
      static int solveB(String input) {
          String[] rows = splitInput(input);
          Pair<List<Pair<Integer, Integer>>,List<Pair<Integer, Integer>>> starPositionMovement = getStarsPositionAndMovement(rows);
-         return findMin(starPositionMovement.getKey(), starPositionMovement.getValue());
+         return findTime(starPositionMovement.getKey(), starPositionMovement.getValue());
     }
     private static Pair<List<Pair<Integer, Integer>>,List<Pair<Integer, Integer>>> getStarsPositionAndMovement(String[] dataRows) {
         List<Pair<Integer, Integer>> coordinates = new ArrayList<>();
