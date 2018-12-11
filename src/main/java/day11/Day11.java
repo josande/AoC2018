@@ -49,17 +49,43 @@ class Day11 {
                 powerGrid[x][y]=(int) getPowerLevel(x+1, y+1, Integer.valueOf(input));
             }
         }
-        int maxPower=0;
-        int maxSize=0;
-        String coordinate="";
-        for (int size=1; size <=300; size++) {
-            Pair<String, Integer> result = getMaxPowerSquare(powerGrid, size);
-            if  (result.getValue() > maxPower) {
-                maxPower=result.getValue();
-                coordinate=result.getKey();
-                maxSize=size;
+        int maxPower=Integer.MIN_VALUE;
+        int bestSize=0;
+        int bestX=0, bestY=0;
+        for (int x=0; x<300; x++) {
+            for (int y = 0; y < 300; y++) {
+                Pair<Integer, Integer> p =getMaxSizeAndPower(powerGrid, x , y);
+                if (p.getValue()>maxPower) {
+                    maxPower=p.getValue();
+                    bestSize=p.getKey();
+                    bestX=x+1;
+                    bestY=y+1;
+                }
             }
         }
-        return coordinate+","+maxSize;
+        return bestX+","+bestY+","+bestSize;
     }
+    private static Pair<Integer, Integer> getMaxSizeAndPower(int[][] grid, int x, int y) {
+        int maxSize=300-Math.max(x,y);
+        int currentMax=Integer.MIN_VALUE;
+        int bestSize=Integer.MIN_VALUE;
+        int currentSum=0;
+
+        //Get right side and bottom
+        for (int size=0; size<maxSize; size++) {
+            for (int i=0; i<size;i++) {
+                currentSum+=grid[x+i][y+size];
+                currentSum+=grid[x+size][y+i];
+            }
+            //Get corner
+            currentSum+=grid[x+size][y+size];
+
+            if (currentSum>currentMax) {
+                currentMax=currentSum;
+                bestSize=size+1;
+            }
+        }
+        return new Pair<>(bestSize, currentMax);
+    }
+
 }
