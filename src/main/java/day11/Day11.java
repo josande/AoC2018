@@ -35,7 +35,7 @@ class Day11 {
 
     }
 
-    static long getPowerLevel(int x, int y, int serialNumber) { //3,5 8
+    static long getPowerLevel(int x, int y, int serialNumber) {
         long rackId = x+10L;
         long power = rackId*y+serialNumber;
         power*=rackId;
