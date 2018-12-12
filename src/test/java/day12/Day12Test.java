@@ -11,14 +11,32 @@ class Day12Test {
 
     @Test
     void example_A() {
-        String input = "";
-        assertEquals("", solveA(input));
+        String input = "initial state: #..#.#..##......###...###\n" +
+                "\n" +
+                "...## => #\n" +
+                "..#.. => #\n" +
+                ".#... => #\n" +
+                ".#.#. => #\n" +
+                ".#.## => #\n" +
+                ".##.. => #\n" +
+                ".#### => #\n" +
+                "#.#.# => #\n" +
+                "#.### => #\n" +
+                "##.#. => #\n" +
+                "##.## => #\n" +
+                "###.. => #\n" +
+                "###.# => #\n" +
+                "####. => #";
+        assertEquals(325, solveA(input));
     }
     @Test
-    void example_B() {
-        String input = "";
-        assertEquals("", solveB(input));
+    void testNoMove() {
+        String input = "initial state: #.\n" +
+                "\n" +
+                "..#.. => #";
+        assertEquals(0, solveA(input));
     }
+
     @Test
     void puzzle() {
         String day = "12";

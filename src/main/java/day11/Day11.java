@@ -42,7 +42,7 @@ class Day11 {
         return (power%1000/100-5);
     }
 
-    static String solveB(String input) {
+    static String    solveB(String input) {
         int[][] powerGrid = new int[300][300];
         for (int x=0; x<300; x++) {
             for (int y=0; y< 300; y++) {
