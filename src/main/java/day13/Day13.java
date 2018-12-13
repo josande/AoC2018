@@ -1,8 +1,8 @@
 package day13;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javafx.util.Pair;
+
+import java.util.*;
 
 class Day13 {
     static class Cart implements Comparable<Cart> {
@@ -13,6 +13,7 @@ class Day13 {
         Cart(int y, int x, char c) {
             this.x=x;
             this.y=y;
+
             if (c == '<'){
                 dx=-1;
                 dy=0;
@@ -50,20 +51,15 @@ class Day13 {
             return other.getX()-this.getX();
         }
 
-        boolean move(char[][] track, List<Cart> carts) {
-
-            if (!isFree(y+dy, x+dx, track, carts)) {
-                x=x+dx;
-                y=y+dy;
-
-                track[y][x] = 'X';
-        return false;
-            }
+        boolean move(HashMap<Pair<Integer, Integer>, Character> map, List<Cart> carts, int iteration) {
+            Pair<Integer, Integer> location = new Pair<>(y+dy,x+dx);
             x=x+dx;
             y=y+dy;
+            if (!isFree(location, carts)) {
+                return false;
+            }
 
-            char nextPlace= track[y][x];
-            //System.out.print("x:"+x+" y:"+y+" "+"Next: "+nextPlace +" dx:"+dx+" dy:"+dy);
+            char nextPlace= map.getOrDefault(location, ' ');
 
             int tmp=dx;
             if (nextPlace == '\\') {
@@ -83,47 +79,40 @@ class Day13 {
                     dy=-tmp;
                 }
                 turns++;
+
             }
 
             return true;
         }
-        private boolean isFree(int y, int x, char[][] track, List<Cart> carts) {
+
+        private boolean isFree(Pair<Integer, Integer> location, List<Cart> carts) {
+            int cartsHere=0;
             for (Cart cart: carts) {
-                if (cart.getX()==x && cart.getY()==y) {
-                    return false;
+                if (cart.getX()==location.getValue() && cart.getY()==location.getKey()) {
+                    cartsHere++;
+                    if (cartsHere>1)
+                        return false;
                 }
-            }
-            if (track[y][x] == 'X') {
-                return false;
             }
             return true;
         }
 
     }
 
-
     static String solveA(String input) {
         String[] rows = input.split("\r?\n");
-        char[][] track = new char[rows.length][rows[0].length()];
         ArrayList<Cart> carts = new ArrayList<>();
-
+        HashMap<Pair<Integer, Integer>, Character> map = new HashMap<>();
         for (int row=0; row<rows.length; row++) {
             for (int col=0; col< rows[row].length(); col++) {
+                Pair<Integer, Integer> coordinate = new Pair<>(row, col);
                 char curr= rows[row].charAt(col);
-                if (curr=='<') {
+                if (curr=='^' ||curr=='v' || curr=='<' ||curr=='>') {
                     carts.add(new Cart(row, col, curr));
-                    track[row][col] = '-';
-                } else if (curr=='>') {
-                    carts.add(new Cart(row, col, curr));
-                    track[row][col] = '-';
-                } else if (curr=='v') {
-                    carts.add(new Cart(row, col, curr));
-                    track[row][col] = '|';
-                } else if (curr=='^') {
-                    carts.add(new Cart(row, col, curr));
-                    track[row][col] = '|';
-                } else {
-                    track[row][col] = curr;
+
+                }
+                if (curr=='/' || curr=='\\'  || curr=='+' ) {
+                    map.put(coordinate, curr);
                 }
             }
         }
@@ -131,11 +120,12 @@ class Day13 {
         //Move da cars!
 
 
-
+        System.out.println("MapSize: "+map.size());
         for (int iteration = 0; ; iteration++) {
             Collections.sort(carts);
             for (Cart cart : carts) {
-                if (!cart.move(track, carts)) {
+            //    System.out.println(cart.getY()+","+cart.getX());
+                if (!cart.move(map, carts,iteration)) {
                     System.out.println(" KABLOOM @ "+cart.getX()+", "+cart.getY());
                     return cart.getX()+","+cart.getY();
                 }
