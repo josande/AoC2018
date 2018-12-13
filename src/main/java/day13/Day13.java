@@ -76,11 +76,11 @@ class Day13 {
         ArrayList<Cart> carts = new ArrayList<>();
         HashMap<Pair<Integer, Integer>, Character> map = new HashMap<>();
         for (int row=0; row<rows.length; row++) {
-            for (int col=0; col< rows[row].length(); col++) {
+            for (int col=0; col < rows[row].length(); col++) {
                 char currentChar= rows[row].charAt(col);
-                if ( currentChar=='^' || currentChar=='v' || currentChar=='<' || currentChar=='>') {
+                if ( currentChar == '^' || currentChar == 'v' || currentChar == '<' || currentChar == '>' ) {
                     carts.add(new Cart(row, col, currentChar));
-                } else if (currentChar=='/' || currentChar=='\\' || currentChar=='+' ) {
+                } else if ( currentChar == '/' || currentChar == '\\' || currentChar == '+' ) {
                     map.put(new Pair<>(row, col), currentChar);
                 }
             }
@@ -100,13 +100,12 @@ class Day13 {
         ArrayList<Cart> carts = new ArrayList<>();
         HashMap<Pair<Integer, Integer>, Character> map = new HashMap<>();
         for (int row=0; row<rows.length; row++) {
-            for (int col=0; col< rows[row].length(); col++) {
-                Pair<Integer, Integer> coordinate = new Pair<>(row, col);
-                char curr= rows[row].charAt(col);
-                if (curr=='^' ||curr=='v' || curr=='<' ||curr=='>') {
-                    carts.add(new Cart(row, col, curr));
-                } else if (curr=='/' || curr=='\\'  || curr=='+' ) {
-                    map.put(coordinate, curr);
+            for (int col=0; col < rows[row].length(); col++) {
+                char currentChar= rows[row].charAt(col);
+                if ( currentChar == '^' || currentChar == 'v' || currentChar == '<' || currentChar == '>' ) {
+                    carts.add(new Cart(row, col, currentChar));
+                } else if ( currentChar == '/' || currentChar == '\\' || currentChar == '+' ) {
+                    map.put(new Pair<>(row, col), currentChar);
                 }
             }
         }
@@ -122,7 +121,6 @@ class Day13 {
                     cartsToRemove.addAll(cartsHere);
             }
             carts.removeAll(cartsToRemove);
-
             if (carts.size() == 1)
                 return carts.get(0).getX() + "," + carts.get(0).getY();
         }
