@@ -9,10 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Day13Test {
 
+
     @Test
     void example_A() {
-        String input = "";
-        assertEquals("", solveA(input));
+        String input = "/->-\\        \n" +
+                       "|   |  /----\\\n" +
+                       "| /-+--+-\\  |\n" +
+                       "| | |  | v  |\n" +
+                       "\\-+-/  \\-+--/\n" +
+                       "  \\------/   ";
+        assertEquals("7,3", solveA(input));
     }
     @Test
     void example_B() {
