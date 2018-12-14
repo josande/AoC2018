@@ -1,7 +1,7 @@
 package day14;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 class Day14 {
     static String solveA(String input) {
@@ -32,10 +32,10 @@ class Day14 {
     }
 
     static int solveB(String input) {
-        ArrayList<Integer> scoreboard=new ArrayList<>();
-        scoreboard.add(3);
-        scoreboard.add(7);
+        ArrayList<Integer> scoreboard=new ArrayList<>(Arrays.asList(3,7));
         ArrayList<Integer> inputList = new ArrayList<>();
+        int scoreSize;
+        int match;
         for (char c : input.toCharArray()) {
             inputList.add(c-48);
         }
@@ -46,13 +46,27 @@ class Day14 {
             int sum=scoreboard.get(pos1)+scoreboard.get(pos2);
             if (sum>9) {
                 scoreboard.add(sum/10);
-                if (scoreboard.size()>inputList.size() && scoreboard.subList(scoreboard.size()-input.length(), scoreboard.size()).equals(inputList)){
-                    return Collections.indexOfSubList(scoreboard, inputList);
+                scoreSize=scoreboard.size();
+                match=0;
+                for (int i =1; i<scoreSize; i++) {
+                    if (scoreboard.get(scoreSize-i) != inputList.get(input.length()-i)) {
+                        break;
+                    }
+                    match++;
+                    if (match==input.length())
+                        return scoreSize-input.length();
                 }
             }
             scoreboard.add(sum%10);
-            if (scoreboard.size()>inputList.size() && scoreboard.subList(scoreboard.size()-input.length(), scoreboard.size()).equals(inputList)){
-                return Collections.indexOfSubList(scoreboard, inputList);
+            scoreSize=scoreboard.size();
+            match=0;
+            for (int i =1; i<scoreSize; i++) {
+                if (scoreboard.get(scoreSize-i) != inputList.get(input.length()-i)) {
+                    break;
+                }
+                match++;
+                if (match==input.length())
+                    return scoreSize-input.length();
             }
             pos1=(pos1+scoreboard.get(pos1)+1)%scoreboard.size();
             pos2=(pos2+scoreboard.get(pos2)+1)%scoreboard.size();
