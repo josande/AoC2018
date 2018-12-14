@@ -11,14 +11,21 @@ class Day14Test {
 
     @Test
     void example_A() {
-        String input = "";
-        assertEquals("", solveA(input));
+        assertEquals("5158916779", solveA("9"));
+        assertEquals("0124515891", solveA("5"));
+        assertEquals("9251071085", solveA("18"));
+        assertEquals("5941429882", solveA("2018"));
+
+
     }
     @Test
     void example_B() {
-        String input = "";
-        assertEquals("", solveB(input));
+        assertEquals(9, solveB("51589"));
+        assertEquals(5, solveB("01245"));
+        assertEquals(18, solveB("92510"));
+        assertEquals(2018, solveB("59414"));
     }
+
     @Test
     void puzzle() {
         String day = "14";
@@ -26,5 +33,4 @@ class Day14Test {
         System.out.println("Day" + day + "(a): " + solveA(input));
         System.out.println("Day" + day + "(b): " + solveB(input));
     }
-
 }
