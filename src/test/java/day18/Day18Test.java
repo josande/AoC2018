@@ -11,14 +11,19 @@ class Day18Test {
 
     @Test
     void example_A() {
-        String input = "";
-        assertEquals("", solveA(input));
+        String input =  ".#.#...|#.\n" +
+                        ".....#|##|\n" +
+                        ".|..|...#.\n" +
+                        "..|#.....#\n" +
+                        "#.#|||#|#|\n" +
+                        "...#.||...\n" +
+                        ".|....|...\n" +
+                        "||...#|.#|\n" +
+                        "|.||||..|.\n" +
+                        "...#.|..|.";
+        assertEquals(1147, solveA(input));
     }
-    @Test
-    void example_B() {
-        String input = "";
-        assertEquals("", solveB(input));
-    }
+
     @Test
     void puzzle() {
         String day = "18";
