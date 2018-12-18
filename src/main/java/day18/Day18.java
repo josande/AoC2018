@@ -21,70 +21,38 @@ class Day18 {
                 int lumberyard = 0;
                 int trees = 0;
                 if (x > 0 && y > 0) {
-                    if (map[x - 1][y - 1] == '|') {
-                        trees++;
-                    }
-                    if (map[x - 1][y - 1] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x - 1][y - 1] == '|') trees++;
+                    if (map[x - 1][y - 1] == '#') lumberyard++;
                 }
                 if (y > 0) {
-                    if (map[x][y - 1] == '|') {
-                        trees++;
-                    }
-                    if (map[x][y - 1] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x][y - 1] == '|') trees++;
+                    if (map[x][y - 1] == '#') lumberyard++;
                 }
                 if (y > 0 && x < maxX) {
-                    if (map[x + 1][y - 1] == '|') {
-                        trees++;
-                    }
-                    if (map[x + 1][y - 1] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x + 1][y - 1] == '|') trees++;
+                    if (map[x + 1][y - 1] == '#') lumberyard++;
                 }
 
                 if (x > 0) {
-                    if (map[x - 1][y] == '|') {
-                        trees++;
-                    }
-                    if (map[x - 1][y] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x - 1][y] == '|') trees++;
+                    if (map[x - 1][y] == '#') lumberyard++;
                 }
                 if (x < maxX) {
-                    if (map[x + 1][y] == '|') {
-                        trees++;
-                    }
-                    if (map[x + 1][y] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x + 1][y] == '|') trees++;
+                    if (map[x + 1][y] == '#') lumberyard++;
                 }
 
                 if (x > 0 && y < maxY) {
-                    if (map[x - 1][y + 1] == '|') {
-                        trees++;
-                    }
-                    if (map[x - 1][y + 1] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x - 1][y + 1] == '|')  trees++;
+                    if (map[x - 1][y + 1] == '#') lumberyard++;
                 }
                 if (y < maxY) {
-                    if (map[x][y + 1] == '|') {
-                        trees++;
-                    }
-                    if (map[x][y + 1] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x][y + 1] == '|') trees++;
+                    if (map[x][y + 1] == '#') lumberyard++;
                 }
                 if (y < maxY && x < maxX) {
-                    if (map[x + 1][y + 1] == '|') {
-                        trees++;
-                    }
-                    if (map[x + 1][y + 1] == '#') {
-                        lumberyard++;
-                    }
+                    if (map[x + 1][y + 1] == '|') trees++;
+                    if (map[x + 1][y + 1] == '#') lumberyard++;
                 }
 
                 if (map[x][y] == '.' && trees >= 3)
@@ -120,20 +88,16 @@ class Day18 {
         for (int i=0; i<iterations;i++) {
             map = updateMap(map);
         }
-
-        int value=findValue(map);
-        return value;
+        return findValue(map);
     }
     private static int findValue(char[][] map) {
         int lumberyard=0;
         int trees=0;
-        int maxY=map.length-1;
-        int maxX=map[0].length-1;
-        for (int y=0; y<=maxY; y++) {
-            for (int x = 0; x <= maxX; x++) {
-                if (map[y][x]=='|')
+        for (char[] aMap : map) {
+            for (char c : aMap ){
+                if (c=='|')
                     trees++;
-                if (map[y][x]=='#')
+                if (c=='#')
                     lumberyard++;
             }
         }
