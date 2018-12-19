@@ -187,12 +187,13 @@ class Day19 {
         while (state[ip] >= 0 && state[ip] < commands.size()) {
             state = doOperation(commands.get(state[ip])[0], state, Integer.valueOf(commands.get(state[ip])[1]), Integer.valueOf(commands.get(state[ip])[2]), Integer.valueOf(commands.get(state[ip])[3]));
             state[ip]++;
-
-            if (state[5] > 10000000) {
+            int bigNumber = Arrays.stream(state).max().getAsInt();
+            if (state[0] ==0 && bigNumber>1000000) {
                 int result = 0;
-                for (int i = 1; i <= state[5]; i++) {
-                    if (state[5] % i == 0) {
+                for (int i = 1; i <= Math.sqrt(bigNumber); i++) {
+                    if (bigNumber % i == 0) {
                         result += i;
+                        result += bigNumber/i;
                     }
                 }
                 return result;
