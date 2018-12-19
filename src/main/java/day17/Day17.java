@@ -4,9 +4,7 @@ import utils.Utils;
 
 import java.awt.*;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.stream.Stream;
 
 class Day17 {
 
@@ -35,18 +33,18 @@ class Day17 {
         Integer minX= (int) walls.stream().mapToDouble(Point::getX).min().getAsDouble();
         Integer maxX= (int) walls.stream().mapToDouble(Point::getX).max().getAsDouble();
         int xRange=maxX-minX+3;
-        char[][] map = new char[maxY+1][xRange];
+        char[][] map = new char[maxY+1][xRange+2];
 
         for (int y=0; y<=maxY; y++) {
-            for (int x=0;x<xRange; x++) {
+            for (int x=0;x<xRange+1; x++) {
                 if (walls.contains(new Point(x+minX-1,y))) {
-                    map[y][x]='#';
+                    map[y][x+1]='#';
                 } else {
-                    map[y][x]='.';
+                    map[y][x+1]='.';
                 }
             }
         }
-        map[0][500-minX+1] = '+';
+        map[0][500-minX+2] = '+';
         return map;
     }
     static void print(char[][] map) {
@@ -60,7 +58,7 @@ class Day17 {
     static char[][] updateMap(char[][] map) {
         char[][] newMap = Arrays.copyOf(map, map.length);
         for (int y = 0; y < newMap.length-1; y++) {
-            for (int x = 0; x < newMap[y].length; x++) {
+            for (int x = 0; x < newMap[y].length-1; x++) {
                 if (newMap[y][x] == '|' || newMap[y][x] == '+') {
                     if (newMap[y + 1][x] == '.') {
                         newMap[y + 1][x] = '|';
@@ -91,14 +89,14 @@ class Day17 {
     static int solveA(String input) {
         char[][] map = makeMap(input);
 //        System.out.println("start:");
-  //      print(map);
+      //  print(map);
     //    System.out.println("Add water:");
 
         char[][] mapBefore = Utils.cloneArray(map);
-        map=updateMap(map);;
+        map=updateMap(map);
         while(!Arrays.deepEquals(map, mapBefore)) {
             mapBefore = Utils.cloneArray(map);
-            map=updateMap(map);
+            map = updateMap(map);
         }
       //  print(map);
         int water = countWater(map);
