@@ -11,14 +11,17 @@ class Day19Test {
 
     @Test
     void example_A() {
-        String input = "";
-        assertEquals("", solveA(input));
+        String input = "#ip 0\n" +
+                "seti 5 0 1\n" +
+                "seti 6 0 2\n" +
+                "addi 0 1 0\n" +
+                "addr 1 2 3\n" +
+                "setr 1 0 0\n" +
+                "seti 8 0 4\n" +
+                "seti 9 0 5";
+        assertEquals(7, solveA(input));
     }
-    @Test
-    void example_B() {
-        String input = "";
-        assertEquals("", solveB(input));
-    }
+
     @Test
     void puzzle() {
         String day = "19";

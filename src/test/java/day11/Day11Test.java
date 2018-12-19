@@ -26,7 +26,6 @@ class Day11Test {
     void example_B() {
         assertEquals("90,269,16", solveB("18"));
         assertEquals("232,251,12", solveB("42"));
-
     }
     @Test
     void puzzle() {

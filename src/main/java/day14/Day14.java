@@ -36,6 +36,7 @@ class Day14 {
         ArrayList<Integer> inputList = new ArrayList<>();
         int scoreSize;
         int match;
+
         for (char c : input.toCharArray()) {
             inputList.add(c-48);
         }

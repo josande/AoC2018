@@ -150,7 +150,7 @@ class Day16 {
         }
         return possibleOps;
     }
-    static int[] doOperation(int op, int[] state, int a, int b, int c) {
+    private static int[] doOperation(int op, int[] state, int a, int b, int c) {
         switch(op) {
             case 0 : return addr(state,a,b,c);
             case 1 : return addi(state,a,b,c);
@@ -172,7 +172,7 @@ class Day16 {
         }
     }
 
-    static List<int[]> getStates(String input) {
+    private static List<int[]> getStates(String input) {
         String[] rows = input.split("\r?\n");
         List<int[]> states = new ArrayList<>();
         for(String row : rows) {
@@ -188,7 +188,7 @@ class Day16 {
         return states;
     }
 
-    static List<int[]> getResults(String input) {
+    private static List<int[]> getResults(String input) {
         String[] rows = input.split("\r?\n");
         List<int[]> results = new ArrayList<>();
         for(String row : rows) {
@@ -204,7 +204,7 @@ class Day16 {
         return results;
     }
 
-    static List<int[]> getInputs(String input) {
+    private static List<int[]> getInputs(String input) {
         String[] rows = input.split("\r?\n");
         List<int[]> inputs = new ArrayList<>();
         for(String row : rows) {
@@ -217,7 +217,7 @@ class Day16 {
         }
         return inputs;
     }
-    static int[] getInputsForSingleRow(String row) {
+    private static int[] getInputsForSingleRow(String row) {
         int[] inputValues = new int[4];
         inputValues[0] = Integer.valueOf(row.split(" ")[0]);
         inputValues[1] = Integer.valueOf(row.split(" ")[1]);
@@ -269,7 +269,6 @@ class Day16 {
 
             //3 set the ints and the current state to the opRunnerThingy, get the new state as result.
             state = doOperation(inputValues[0],state,inputValues[1],inputValues[2],inputValues[3]);
-
         }
 
         return state[0];
