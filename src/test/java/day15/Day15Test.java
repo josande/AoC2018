@@ -1,8 +1,8 @@
 package day15;
 
-import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 import utils.Utils;
+import utils.Utils.Coordinate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import static day15.Day15.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class Day15Test {
 
@@ -22,12 +23,12 @@ class Day15Test {
                         "#E.G.E#\n" +
                         "#.G.E.#\n" +
                         "#######";
-        HashSet<Pair<Integer, Integer>> dungeonMap = mapWalls(input);
-
-        assertEquals(true,  dungeonMap.contains(new Pair<>(0,0)) );
-        assertEquals(false, dungeonMap.contains(new Pair<>(1,1)) );
-        assertEquals(true,  dungeonMap.contains(new Pair<>(4,4)) );
-        assertEquals(false, dungeonMap.contains(new Pair<>(4,1)) );
+        HashSet<Coordinate> dungeonMap = mapWalls(input);
+        assertEquals(20, dungeonMap.size());
+        assertEquals(true,  dungeonMap.contains(new Coordinate(0,0)) );
+        assertEquals(false, dungeonMap.contains(new Coordinate(1,1)) );
+        assertEquals(true,  dungeonMap.contains(new Coordinate(4,4)) );
+        assertEquals(false, dungeonMap.contains(new Coordinate(4,1)) );
     }
     @Test
     void testFindAllUnits() {
@@ -84,7 +85,9 @@ class Day15Test {
         assertEquals(u5, units.get(4));
         assertEquals(u6, units.get(5));
         assertEquals(u7, units.get(6));
-    }/*
+    }
+
+    /*
     @Test
      void getFreeNodesNextToNode() {
         ArrayList<Pair<Integer, Integer>> expectedFreeNodes = new ArrayList<>();
@@ -184,6 +187,18 @@ class Day15Test {
 
     }
 */
+
+    @Test
+    void testGetFinalDestination() {
+        String input="#######\n" +
+                "#E..G.#\n" +
+                "#...#.#\n" +
+                "#.G.#G#\n" +
+                "#######";
+        List<Unit> units = findAllUnits(input);
+        HashSet<Coordinate> walls = mapWalls(input);
+        assertEquals(new Coordinate(3,1), getFinalDestination(units, walls, units.get(0)));
+    }
     @Test
     void example_A() {
         String input  = "#######\n" +
@@ -293,12 +308,12 @@ class Day15Test {
     @Test
     void example_B4() {
         String input =  "#######\n" +
-                "#.E...#\n" +
-                "#.#..G#\n" +
-                "#.###.#\n" +
-                "#E#G#G#\n" +
-                "#...#G#\n" +
-                "#######";
+                        "#.E...#\n" +
+                        "#.#..G#\n" +
+                        "#.###.#\n" +
+                        "#E#G#G#\n" +
+                        "#...#G#\n" +
+                        "#######";
         assertEquals(6474, solveB(input));
     }
 
@@ -322,7 +337,7 @@ class Day15Test {
                       "#..GEE#\n" +
                       "#######";
         List<Unit> units = findAllUnits(input);
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
+        HashSet<Coordinate> walls = mapWalls(input);
         units.get(0).setHp(3);
         units.get(1).setHp(3);
         units.get(2).setHp(3);
@@ -342,7 +357,7 @@ class Day15Test {
                       "#..G.#\n" +
                       "######";
         List<Unit> units = findAllUnits(input);
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
+        HashSet<Coordinate> walls = mapWalls(input);
 
         print(units, walls);
         resolveRound(units,walls);
@@ -353,11 +368,12 @@ class Day15Test {
 
     }
 
+
     @Test
     void puzzle() {
         String day = "15";
         String input = new Utils().readFile("Day" + day + "Input.txt");
         System.out.println("Day" + day + "(a): " + solveA(input));
-        System.out.println("Day" + day + "(b): " + solveB(input));  // 54680 too low
+        System.out.println("Day" + day + "(b): " + solveB(input));
     }
 }

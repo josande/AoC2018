@@ -36,4 +36,59 @@ public class Utils {
         }
         return target;
     }
+    public static class Coordinate implements Comparable<Coordinate> {
+        int x,y;
+        public Coordinate (int x, int y) {
+            this.x=x;
+            this.y=y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+        public Coordinate getUp() {
+            return new Coordinate(x,y-1);
+        }
+        public Coordinate getDown() {
+            return new Coordinate(x,y+1);
+        }
+        public Coordinate getLeft() {
+            return new Coordinate(x-1,y);
+        }
+        public Coordinate getRight() {
+            return new Coordinate(x+1,y);
+        }
+        @Override
+        public String toString() {
+            return "("+x+","+y+")";
+        }
+        @Override
+        public int compareTo(Coordinate other){
+            if (this.getY() == other.getY()) return this.getX()-other.getX();
+            return this.getY() - other.getY();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) return false;
+            if (obj == this) return true;
+            if (!(obj instanceof Coordinate))return false;
+
+            Coordinate other = (Coordinate) obj;
+            return ( this.getX()==other.getX() &&
+                     this.getY()==other.getY());
+        }
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 53 * hash + this.getY()+47*this.getY();
+            return hash;
+        }
+    }
 }
+
+

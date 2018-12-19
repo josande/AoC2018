@@ -2,48 +2,45 @@ package day15;
 
 
 import javafx.util.Pair;
+import utils.Utils.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class Day15 {
 
     static class Unit implements Comparable<Unit> {
-        int x, y;
+        Coordinate coordinate;
         int hp=200;
         int attackPower;
         boolean isElf;
         Unit(int x, int y, boolean isElf) {
-            this.x=x;
-            this.y=y;
+            this.coordinate=new Coordinate(x,y);
             this.attackPower=3;
             this.isElf = isElf;
         }
-
         Unit(int x, int y, int attackPower, boolean isElf) {
-            this.x=x;
-            this.y=y;
+            this.coordinate=new Coordinate(x,y);
             this.attackPower=attackPower;
             this.isElf = isElf;
         }
-        int getX() {return x;}
-        int getY() {return y;}
-        int getHP() {return hp;}
         int getAttackPower() {return attackPower;}
         void takeDamage(int damage) {
             hp-=damage;
         }
+        int getHP() {return hp;}
         void setHp(int hp) {
             this.hp=hp;
         }
-        Pair<Integer, Integer> getCoordinate() {return new Pair<>(x,y);}
-        void setCoordinate(Pair<Integer, Integer> coordinate) {
-            x=coordinate.getKey();
-            y=coordinate.getValue();
-        }
+        Coordinate getCoordinate() {return coordinate;}
+        void setCoordinate(Coordinate coordinate) { this.coordinate=coordinate; }
+
         @Override
         public int compareTo(Unit other){
-            if (this.getY() == other.getY()) return this.getX()-other.getX();
-            return  this.getY() - other.getY();
+            return  this.getCoordinate().compareTo(other.getCoordinate());
         }
 
         @Override
@@ -53,17 +50,17 @@ class Day15 {
             if (!(other instanceof Unit))return false;
 
             Unit otherUnit = (Unit)other;
-            return (x==otherUnit.getX() && y==otherUnit.getY() && isElf==otherUnit.isElf);
+            return (this.getCoordinate().equals(otherUnit.getCoordinate()) && isElf==otherUnit.isElf);
         }
     }
 
-    static HashSet<Pair<Integer, Integer>> mapWalls(String input) {
+    static HashSet<Coordinate> mapWalls(String input) {
         String[] rows = input.split("\r?\n");
-        HashSet<Pair<Integer, Integer>> walls = new HashSet<>();
+        HashSet<Coordinate> walls = new HashSet<>();
         for(int y = 0; y < rows.length; y++) {
             for(int x = 0; x < rows[y].length(); x++) {
                 if(rows[y].charAt(x) == '#') {
-                    walls.add(new Pair<>(x,y));
+                    walls.add(new Coordinate(x,y));
                 }
             }
         }
@@ -73,7 +70,7 @@ class Day15 {
         return findAllUnits(input, 3);
     }
 
-    static List<Unit> findAllUnits(String input, int attackPower) {
+    private static List<Unit> findAllUnits(String input, int attackPower) {
         String[] rows = input.split("\r?\n");
         List<Unit> units = new ArrayList<>();
         for(int y = 0; y < rows.length; y++) {
@@ -88,30 +85,25 @@ class Day15 {
         }
         return units;
     }
-    private static ArrayList<Pair<Integer, Integer>> getNeighbours (Pair<Integer, Integer> coordinate) {
-            ArrayList<Pair<Integer, Integer>> neighbouringNodes = new ArrayList<>();
-            Pair<Integer, Integer> west  = new Pair<>(coordinate.getKey()-1, coordinate.getValue());
-            Pair<Integer, Integer> north = new Pair<>(coordinate.getKey(),   coordinate.getValue()-1);
-            Pair<Integer, Integer> east  = new Pair<>(coordinate.getKey()+1, coordinate.getValue());
-            Pair<Integer, Integer> south = new Pair<>(coordinate.getKey(),   coordinate.getValue()+1);
-            neighbouringNodes.add(north);
-            neighbouringNodes.add(west);
-            neighbouringNodes.add(east);
-            neighbouringNodes.add(south);
+    private static ArrayList<Coordinate> getNeighbours (Coordinate coordinate) {
+            ArrayList<Coordinate> neighbouringNodes = new ArrayList<>();
+            neighbouringNodes.add(coordinate.getUp());
+            neighbouringNodes.add(coordinate.getLeft());
+            neighbouringNodes.add(coordinate.getRight());
+            neighbouringNodes.add(coordinate.getDown());
         return neighbouringNodes;
     }
-    private static ArrayList<Pair<Integer, Integer>> findFreeNodesNextToNode(List<Unit> units, HashSet<Pair<Integer, Integer>> walls, Pair<Integer, Integer> coordinate) {
-        ArrayList<Pair<Integer, Integer>> neighbours = getNeighbours(coordinate);
-        ArrayList<Pair<Integer, Integer>> freeNodes = new ArrayList<>();
-        for (Pair<Integer, Integer> node : neighbours) {
-         //   System.out.println(node+" isFree " + isFree(units, walls, node));
+    private static ArrayList<Coordinate> findFreeNodesNextToNode(List<Unit> units, HashSet<Coordinate> walls, Coordinate coordinate) {
+        ArrayList<Coordinate> neighbours = getNeighbours(coordinate);
+        ArrayList<Coordinate> freeNodes = new ArrayList<>();
+        for (Coordinate node : neighbours) {
             if (isFree(units, walls, node)) {
                 freeNodes.add(node);
             }
         }
         return freeNodes;
     }
-    private static boolean isFree(List<Unit> units, HashSet<Pair<Integer, Integer>> walls, Pair<Integer, Integer> coordinate) {
+    private static boolean isFree(List<Unit> units, HashSet<Coordinate> walls, Coordinate coordinate) {
         if (walls.contains(coordinate))
             return false;
         for (Unit unit: units) {
@@ -121,9 +113,8 @@ class Day15 {
         }
         return true;
     }
-    private static boolean isNextToEnemy(List<Unit> units, Pair<Integer, Integer> location, boolean lookingForElves) {
-        List<Pair<Integer, Integer>> neighbouringNodes = getNeighbours(location);
-
+    private static boolean isNextToEnemy(List<Unit> units, Coordinate location, boolean lookingForElves) {
+        List<Coordinate> neighbouringNodes = getNeighbours(location);
         for (Unit otherUnit : units) {
             if (lookingForElves==otherUnit.isElf && neighbouringNodes.contains(otherUnit.getCoordinate())) {
                 return true;
@@ -132,7 +123,7 @@ class Day15 {
         return false;
     }
 
-    static boolean resolveRound(List<Unit> units, HashSet<Pair<Integer, Integer>> walls) {
+    static boolean resolveRound(List<Unit> units, HashSet<Coordinate> walls) {
         Collections.sort(units);
         List<Unit> copyOfUnits = new ArrayList<>(units);
         boolean isGameOver=true;
@@ -146,10 +137,10 @@ class Day15 {
 
         return isGameOver;
     }
-    static void print(List<Unit> units, HashSet<Pair<Integer, Integer>> walls) {
+    static void print(List<Unit> units, HashSet<Coordinate> walls) {
         for (int y=0; y<32;y++) {
             for (int x=0; x<32;x++) {
-                Pair<Integer, Integer> p = new Pair<>(x,y);
+                Coordinate p = new Coordinate(x,y);
                 boolean unitHere=false;
                 if (walls.contains(p))
                     System.out.print("#");
@@ -163,9 +154,7 @@ class Day15 {
                     if (!unitHere) {
                         System.out.print(".");
                     }
-
                 }
-
             }
             System.out.print("\n");
         }
@@ -173,10 +162,7 @@ class Day15 {
         for (Unit u : units) {
             System.out.print((u.isElf?"E":"G")+" "+u.getHP()+", ");
         }
-        System.out.print("\n");
-
-        System.out.print("\n");
-
+        System.out.print("\n\n");
     }
     private static boolean isGameOver(List<Unit> units) {
         boolean isElvesLeft=false;
@@ -201,7 +187,7 @@ class Day15 {
         }
     }
     private static Unit findTarget(List<Unit>units, Unit unit) {
-        List<Pair<Integer, Integer>> neighbouringNodes = getNeighbours(unit.getCoordinate());
+        List<Coordinate> neighbouringNodes = getNeighbours(unit.getCoordinate());
 
         int lowestHpSoFar=Integer.MAX_VALUE;
         Unit target=null;
@@ -218,83 +204,75 @@ class Day15 {
         return target;
     }
 
-    static void moveUnit(List<Unit> units, HashSet<Pair<Integer, Integer>> walls, Unit unit) {
+    private static void moveUnit(List<Unit> units, HashSet<Coordinate> walls, Unit unit) {
         if (isNextToEnemy(units, unit.getCoordinate(), !unit.isElf)) {
             return;
         }
-        Pair<Integer, Integer> bestCoordinate=null;
-        int shortestWalk=Integer.MAX_VALUE;
-        int sidePriority=4;
-        for (Pair<Integer,Integer> direction : findFreeNodesNextToNode(units, walls,unit.getCoordinate())) { //TODO HANDLE SO THAT THIS CHOOSES RIGHT SIDE OF ENEMY
-            Pair<Integer, Integer> result = getDistanceToEnemy(units, walls, direction, !unit.isElf);
-            if (result.getKey() < shortestWalk) {
-                shortestWalk = result.getKey();
-                bestCoordinate = direction;
-                sidePriority=result.getValue();
-           //     System.out.println("New shortest distance ("+result.getKey()+")! Before: "+bestCoordinate+", New: "+direction+". SidePriority before: "+sidePriority+" Current: "+result.getValue());
+        int distance=Integer.MAX_VALUE;
+        Coordinate bestWay=null;
+        Coordinate finalDestination = getFinalDestination(units, walls, unit);
+        for (Coordinate direction : findFreeNodesNextToNode(units, walls,unit.getCoordinate())) {
 
-            } else if (result.getKey() == shortestWalk) {
-             //   System.out.println("Same distance("+result.getKey()+")! Before: "+bestCoordinate+", New: "+direction+". SidePriority before: "+sidePriority+" Current: "+result.getValue());
-                if (result.getValue() < sidePriority) {
-                    shortestWalk = result.getKey();
-                    bestCoordinate = direction;
-                    sidePriority=result.getValue();
+            int currentDistance = getDistance(direction, finalDestination, units, walls);
+            if (currentDistance>=0 && currentDistance < distance) {
+                distance = currentDistance;
+                bestWay = direction;
+            }
+        }
+
+        if (bestWay!=null)
+            unit.setCoordinate(bestWay);
+    }
+    static Coordinate getFinalDestination(List<Unit> units, HashSet<Coordinate> walls, Unit unit) {
+        List<Unit> enemies = units.stream().filter(u->(u.isElf != unit.isElf)).collect(Collectors.toList());
+        int shortestDistance=Integer.MAX_VALUE;
+        List<Coordinate> closestCoordinates=new ArrayList<>();
+        Coordinate start = unit.getCoordinate();
+        for (Unit enemy : enemies ) {
+            for ( Coordinate coordinate : findFreeNodesNextToNode(units, walls, enemy.getCoordinate())) {
+                int distance=getDistance(start, coordinate, units, walls);
+                if ( distance >= 0 ) {
+                    if (distance < shortestDistance) {
+                        shortestDistance=distance;
+                        closestCoordinates=new ArrayList<>();
+                        closestCoordinates.add(coordinate);
+                    } if (distance == shortestDistance) {
+                        closestCoordinates.add(coordinate);
+                    }
                 }
             }
         }
-        if (bestCoordinate!=null)
-            unit.setCoordinate(bestCoordinate);
+
+        if (closestCoordinates.isEmpty()) {
+            return null;
+        }
+        Collections.sort(closestCoordinates);
+        return closestCoordinates.get(0);
     }
-    static Pair<Integer, Integer> getDistanceToEnemy(List<Unit> units, HashSet<Pair<Integer, Integer>> walls, Pair<Integer,Integer> coordinate, boolean lookingForElves) {
 
-        //TODO Rewrite
-        //Loop for all enemies
-          // Loop for all side of enemy
-            // If best distance is tied
-              //Choose enemy in order
-                //choose side of that enemy in order
-
-        HashSet<Pair<Integer, Integer>> scanned = new HashSet<>();
-        HashSet<Pair<Integer, Integer>> queue = new HashSet<>();
-        HashSet<Pair<Integer, Integer>> results = new HashSet<>();
-        queue.add(coordinate);
-
-        for (int i=0; ; i++) {
-            HashSet<Pair<Integer, Integer>> newToAdd  = new HashSet<>();
-            for (Pair<Integer, Integer> location : queue) {
-                if (scanned.contains(location))
+    private static int getDistance(Coordinate start, Coordinate end, List<Unit> units, HashSet<Coordinate> walls) {
+        HashSet<Coordinate> scanned = new HashSet<>();
+        HashSet<Coordinate> queue = new HashSet<>();
+        queue.add(start);
+        for (int steps=0; ; steps++) {
+            HashSet<Coordinate> newToAdd  = new HashSet<>();
+            for (Coordinate current : queue) {
+                if (scanned.contains(current))
                     continue;
-                if (isNextToEnemy(units, location, lookingForElves)) {
-                    results.add(location);
+                if (current.equals(end)) {
+                    return steps;
                 }
-                scanned.add(location);
-                newToAdd.addAll(findFreeNodesNextToNode(units, walls, location));
-            }
-            if (!results.isEmpty()) {
-                int directionValue=4;
-                for (Pair<Integer, Integer> result : results) {
-                    directionValue = Math.min(directionValue, getDirectionalValue(units, lookingForElves, result));
-                }
-                return new Pair<>(i, directionValue);
+                scanned.add(current);
+                newToAdd.addAll(findFreeNodesNextToNode(units, walls, current));
             }
             queue.addAll(newToAdd);
             queue.removeAll(scanned);
 
-            if (queue.isEmpty()) return new Pair<>(Integer.MAX_VALUE, 4);
+            if (queue.isEmpty())
+                return -1;
         }
     }
-    private static int getDirectionalValue(List<Unit> units,  boolean lookingForElves, Pair<Integer,Integer> coordinate) {
-        ArrayList<Pair<Integer, Integer>> neighbours = getNeighbours(coordinate);
-        int directionalValue=4;
-        for (int i=3; i>=0; i--) {
-            for (Unit unit : units) {
-                if (lookingForElves== unit.isElf && unit.getCoordinate().equals(neighbours.get(i))) {
-                    directionalValue=i;
-                }
-            }
-        }
-        return directionalValue;
-    }
+
     private static int getScore(List<Unit> units) {
         int score=0;
         for (Unit unit : units) {
@@ -304,7 +282,7 @@ class Day15 {
     }
 
     static int solveA(String input) {
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
+        HashSet<Coordinate> walls = mapWalls(input);
         List<Unit> units = findAllUnits(input,3);
         print(units, walls);
         for (int i=0;  ; i++) {
@@ -315,7 +293,7 @@ class Day15 {
         }
     }
     private static Pair<Boolean, Integer> solveWithAp(String input, int ap) {
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
+        HashSet<Coordinate> walls = mapWalls(input);
         List<Unit> units = findAllUnits(input,ap);
         int startElves=0;
         for (Unit u : units) {
@@ -336,8 +314,6 @@ class Day15 {
             }
 
             if (gameOver) {
-                System.out.println("Iterations: "+i+" Score: "+getScore(units)+" Ap:"+ap);
-               // print(units,walls);
                 return new Pair<>(true, i*getScore(units));
             }
         }
