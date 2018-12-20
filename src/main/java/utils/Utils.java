@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.stream.IntStream;
 
 public class Utils {
     public String readFile(String fileName) {
@@ -28,12 +29,11 @@ public class Utils {
         }
         return target;
     }
+
     public static char[][] cloneArray(char[][] src) {
         int length = src.length;
         char[][] target = new char[length][src[0].length];
-        for (int i = 0; i < length; i++) {
-            System.arraycopy(src[i], 0, target[i], 0, src[i].length);
-        }
+        IntStream.range(0, length).forEach(i -> System.arraycopy(src[i], 0, target[i], 0, src[i].length));
         return target;
     }
     public static class Coordinate implements Comparable<Coordinate> {

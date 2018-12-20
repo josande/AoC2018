@@ -93,7 +93,7 @@ class Day15 {
             neighbouringNodes.add(coordinate.getDown());
         return neighbouringNodes;
     }
-    private static ArrayList<Coordinate> findFreeNodesNextToNode(List<Unit> units, HashSet<Coordinate> walls, Coordinate coordinate) {
+    static ArrayList<Coordinate> findFreeNodesNextToNode(List<Unit> units, HashSet<Coordinate> walls, Coordinate coordinate) {
         ArrayList<Coordinate> neighbours = getNeighbours(coordinate);
         ArrayList<Coordinate> freeNodes = new ArrayList<>();
         for (Coordinate node : neighbours) {
@@ -113,7 +113,7 @@ class Day15 {
         }
         return true;
     }
-    private static boolean isNextToEnemy(List<Unit> units, Coordinate location, boolean lookingForElves) {
+    static boolean isNextToEnemy(List<Unit> units, Coordinate location, boolean lookingForElves) {
         List<Coordinate> neighbouringNodes = getNeighbours(location);
         for (Unit otherUnit : units) {
             if (lookingForElves==otherUnit.isElf && neighbouringNodes.contains(otherUnit.getCoordinate())) {
@@ -186,7 +186,7 @@ class Day15 {
             }
         }
     }
-    private static Unit findTarget(List<Unit>units, Unit unit) {
+    static Unit findTarget(List<Unit>units, Unit unit) {
         List<Coordinate> neighbouringNodes = getNeighbours(unit.getCoordinate());
 
         int lowestHpSoFar=Integer.MAX_VALUE;
@@ -208,22 +208,18 @@ class Day15 {
         if (isNextToEnemy(units, unit.getCoordinate(), !unit.isElf)) {
             return;
         }
-        int distance=Integer.MAX_VALUE;
-        Coordinate bestWay=null;
-        Coordinate finalDestination = getFinalDestination(units, walls, unit);
-        for (Coordinate direction : findFreeNodesNextToNode(units, walls,unit.getCoordinate())) {
+        Pair<Coordinate,Integer> finalDestination = getFinalDestination(units, walls, unit);
 
-            int currentDistance = getDistance(direction, finalDestination, units, walls);
-            if (currentDistance>=0 && currentDistance < distance) {
-                distance = currentDistance;
-                bestWay = direction;
+        if (finalDestination == null) return;
+        for (Coordinate direction : findFreeNodesNextToNode(units, walls,unit.getCoordinate())) { //TODO See if the initial plan with 'walk out from unit' works if we hook on criteria to sort all matches at closest distance.
+            int currentDistance = getDistance(direction, finalDestination.getKey(), units, walls);
+            if (currentDistance==finalDestination.getValue()-1) {
+                unit.setCoordinate(direction);
+                return;
             }
         }
-
-        if (bestWay!=null)
-            unit.setCoordinate(bestWay);
     }
-    static Coordinate getFinalDestination(List<Unit> units, HashSet<Coordinate> walls, Unit unit) {
+    static Pair<Coordinate, Integer> getFinalDestination(List<Unit> units, HashSet<Coordinate> walls, Unit unit) {
         List<Unit> enemies = units.stream().filter(u->(u.isElf != unit.isElf)).collect(Collectors.toList());
         int shortestDistance=Integer.MAX_VALUE;
         List<Coordinate> closestCoordinates=new ArrayList<>();
@@ -247,7 +243,7 @@ class Day15 {
             return null;
         }
         Collections.sort(closestCoordinates);
-        return closestCoordinates.get(0);
+        return new Pair<>(closestCoordinates.get(0), shortestDistance);
     }
 
     private static int getDistance(Coordinate start, Coordinate end, List<Unit> units, HashSet<Coordinate> walls) {
@@ -284,7 +280,6 @@ class Day15 {
     static int solveA(String input) {
         HashSet<Coordinate> walls = mapWalls(input);
         List<Unit> units = findAllUnits(input,3);
-        print(units, walls);
         for (int i=0;  ; i++) {
             boolean gameOver = resolveRound(units,walls);
             if (gameOver) {

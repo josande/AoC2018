@@ -12,6 +12,7 @@ import java.util.List;
 import static day15.Day15.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Day15Test {
 
@@ -87,14 +88,14 @@ class Day15Test {
         assertEquals(u7, units.get(6));
     }
 
-    /*
+
     @Test
      void getFreeNodesNextToNode() {
-        ArrayList<Pair<Integer, Integer>> expectedFreeNodes = new ArrayList<>();
-        expectedFreeNodes.add(new Pair<>(3,1));
-        expectedFreeNodes.add(new Pair<>(2,2));
-        expectedFreeNodes.add(new Pair<>(4,2));
-        expectedFreeNodes.add(new Pair<>(3,3));
+        ArrayList<Coordinate> expectedFreeNodes = new ArrayList<>();
+        expectedFreeNodes.add(new Coordinate(3,1));
+        expectedFreeNodes.add(new Coordinate(2,2));
+        expectedFreeNodes.add(new Coordinate(4,2));
+        expectedFreeNodes.add(new Coordinate(3,3));
 
         String input =  "#######\n" +
                         "#.G.E.#\n" +
@@ -102,12 +103,11 @@ class Day15Test {
                         "#.G.E.#\n" +
                         "#######";
         List<Unit> units = findAllUnits(input);
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
-        Pair<Integer, Integer> coordinate = new Pair<>(3,2);
+        HashSet<Coordinate> walls = mapWalls(input);
 
-        assertEquals(expectedFreeNodes, findFreeNodesNextToNode(units,walls,coordinate));
-        assertEquals(new ArrayList<>(), findFreeNodesNextToNode(units,walls,new Pair<>(1,1)));
-        assertEquals(new ArrayList<>(), findFreeNodesNextToNode(units,walls,new Pair<>(2,2)));
+        assertEquals(expectedFreeNodes, findFreeNodesNextToNode(units, walls, new Coordinate(3,2)));
+        assertEquals(new ArrayList<>(), findFreeNodesNextToNode(units, walls, new Coordinate(1,1)));
+        assertEquals(new ArrayList<>(), findFreeNodesNextToNode(units, walls, new Coordinate(2,2)));
     }
 
     @Test
@@ -118,11 +118,11 @@ class Day15Test {
                         "#E....#\n" +
                         ".......";
         List<Unit> units = findAllUnits(input);
-        assertTrue(isNextToEnemy(units, new Pair<>(1,1),false));
-        assertFalse(isNextToEnemy(units, new Pair<>(1,1),true));
+        assertTrue(isNextToEnemy(units, new Coordinate(2,2),false));
+        assertFalse(isNextToEnemy(units, new Coordinate(1,1),true));
 
-        assertFalse(isNextToEnemy(units, new Pair<>(5,3),false));
-        assertFalse(isNextToEnemy(units, new Pair<>(5,3),true));
+        assertFalse(isNextToEnemy(units, new Coordinate(5,3),false));
+        assertFalse(isNextToEnemy(units, new Coordinate(5,3),true));
     }
     @Test
     void testFindDistanceToEnemy() {
@@ -131,14 +131,13 @@ class Day15Test {
                         "###EE.#\n" +
                         "#.....#\n" +
                         "#######";
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
+        HashSet<Coordinate> walls = mapWalls(input);
         List<Unit> units = findAllUnits(input);
 
-        //TODO Update with actual directions
-        assertEquals(new Pair<>(0,0),getDistanceToEnemy(units, walls, new Pair<>(2,1),false));
-        assertEquals(new Pair<>(1,0),getDistanceToEnemy(units, walls, new Pair<>(3,1),false));
-        assertEquals(new Pair<>(9,0),getDistanceToEnemy(units, walls, new Pair<>(1,3),false));
-        assertEquals(new Pair<>(2,0),getDistanceToEnemy(units, walls, new Pair<>(1,3),true));
+        assertEquals(new Coordinate(2,1), getFinalDestination(units, walls, new Unit(2,1, true)).getKey());
+        assertEquals(new Coordinate(3,1), getFinalDestination(units, walls, new Unit(3,1, false)).getKey());
+        assertEquals(new Coordinate(3,3), getFinalDestination(units, walls, new Unit(1,3, false)).getKey());
+        assertEquals(new Coordinate(2,1), getFinalDestination(units, walls, new Unit(1,3, true)).getKey());
     }
     @Test
     void testMoveUnit() {
@@ -147,7 +146,7 @@ class Day15Test {
                         "#.......#\n" +
                         "#E...G.E#\n" +
                         "#########";
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
+        HashSet<Coordinate> walls = mapWalls(input);
         List<Unit> units = findAllUnits(input);
 
         Unit e1= new Unit(2,1,true);
@@ -174,7 +173,6 @@ class Day15Test {
                         "#..G..#\n" +
                         "#...G.#\n" +
                         "#######";
-        HashSet<Pair<Integer, Integer>> walls = mapWalls(input);
         List<Unit> units = findAllUnits(input);
         assertEquals(units.get(1),findTarget(units, units.get(2)));
         units.get(1).setHp(10);
@@ -186,7 +184,7 @@ class Day15Test {
 
 
     }
-*/
+
 
     @Test
     void testGetFinalDestination() {
@@ -197,7 +195,8 @@ class Day15Test {
                 "#######";
         List<Unit> units = findAllUnits(input);
         HashSet<Coordinate> walls = mapWalls(input);
-        assertEquals(new Coordinate(3,1), getFinalDestination(units, walls, units.get(0)));
+        assertEquals(new Coordinate(3,1), getFinalDestination(units, walls, units.get(0)).getKey());
+        assertEquals(2, (int) getFinalDestination(units, walls, units.get(0)).getValue());
     }
     @Test
     void example_A() {
@@ -358,14 +357,10 @@ class Day15Test {
                       "######";
         List<Unit> units = findAllUnits(input);
         HashSet<Coordinate> walls = mapWalls(input);
-
-        print(units, walls);
         resolveRound(units,walls);
-        print(units, walls);
+print(units,walls);
         assertEquals(new Unit(2,2,true),units.get(0));
-
         assertEquals(new Unit(2,5,false),units.get(1));
-
     }
 
 
