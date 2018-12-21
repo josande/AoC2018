@@ -1,40 +1,15 @@
 package day20;
 
-import com.mifmif.common.regex.Generex;
 import javafx.util.Pair;
 import utils.Utils.Coordinate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Stack;
 
 class Day20 {
 
-    static List<String> getAllPaths(String input) {
-        input=input.replaceAll("\\^", ""); ///Odd workaround
-        input=input.replaceAll("\\$", ""); ///Odd workaround
-
-        input=input.replaceAll("\\|\\)", "|X)"); ///Odd workaround
-        Generex generex = new Generex(input);
-
-        // Generate all String that matches the given Regex.
-        List<String> matchedStrs = generex.getAllMatchedStrings();
-        List<String> results = new ArrayList<>();
-        for (String str: matchedStrs) {
-            results.add(str.replaceAll("X", ""));
-        }
-
-        return results;
-    }
-
-    static void addRooms(HashMap<Coordinate, Room> rooms, String path) {
-        Coordinate currentLocation = new Coordinate(0,0);
-        for (int i=0;i<path.length(); i++) {
-            currentLocation = nextRoom(currentLocation, path.charAt(i), rooms);
-        }
-    }
-    static Coordinate getNextLocation(Coordinate currentLocation, char c) {
+    private static Coordinate getNextLocation(Coordinate currentLocation, char c) {
         if (c == 'N')
             return currentLocation.getUp();
         if (c == 'S')
@@ -46,21 +21,83 @@ class Day20 {
         return null;
     }
 
-    static Pair<StringBuilder, Coordinate> addRooms(StringBuilder inputLeft, Coordinate location, HashMap<Coordinate, Room> rooms) {
-        char c = inputLeft.charAt(0);
-        while (c != '|' && c != '(' && c != ')') {
-            inputLeft.deleteCharAt(0);
-            location=nextRoom(location, c, rooms);
-        }
-        if (c != '|') {
-            inputLeft = findEndOfParenthesis(inputLeft);
-        }
-        if (c == '(') {
+    static HashMap<Coordinate, Room> depthFirst(String input) {
+        HashMap<Coordinate, Room> rooms = new HashMap<>();
+        Coordinate startLocation = new Coordinate(0,0);
 
+        Stack<Pair<String, Coordinate>> queue = new Stack<>();
+        HashSet<Pair<String, Coordinate>> visited = new HashSet<>();
+
+        queue.add(new Pair<>(input, startLocation));
+
+        while(!queue.isEmpty()){
+            Pair<String, Coordinate> current = queue.pop();
+
+            String inputLeft = current.getKey();
+            boolean isDone = visited.contains(current);
+
+            Coordinate location = current.getValue();
+
+            char c = inputLeft.charAt(0);
+            if (isDone) {
+             //   System.out.println("Been here, skipping on!");
+            } else if (c == '$') {
+              //  System.out.println("Reached the end! Queue:" + queue.size() + " Rooms found:" + rooms.size());
+            } else if (c == '^') {
+                visited.add(new Pair<>(inputLeft, location));
+                inputLeft = inputLeft.substring(1);
+                current = new Pair<>(inputLeft, location);
+                queue.add(current);
+            } else if (c != '|' && c != '(' && c != ')') {
+                visited.add(new Pair<>(inputLeft, location));
+                location = nextRoom(location, c, rooms);
+                inputLeft = inputLeft.substring(1);
+                current = new Pair<>(inputLeft, location);
+                queue.add(current);
+            } else if (c == ')') {
+                visited.add(new Pair<>(inputLeft, location));
+                inputLeft = inputLeft.substring(1);
+                current = new Pair<>(inputLeft, location);
+                queue.add(current);
+            } else if (c == '(') {
+                visited.add(new Pair<>(inputLeft, location));
+                inputLeft = inputLeft.substring(1);
+                current = new Pair<>(inputLeft, location);
+                queue.add(current);
+                int level = 1;
+                while (level > 0) {
+                    c = inputLeft.charAt(0);
+                    inputLeft = inputLeft.substring(1);
+                    if (c == '(') {
+                        level++;
+                    } else if (c == ')') {
+                        level--;
+                    }
+                    if (level == 1 && c == '|') {
+                        queue.add(new Pair<>(inputLeft, location));
+                    }
+                }
+            } else if (c == '|') {
+                visited.add(new Pair<>(inputLeft, location));
+                int level = 1;
+                while (level > 0) {
+                    c = inputLeft.charAt(0);
+                    inputLeft = inputLeft.substring(1);
+                    if (c == '(') {
+                        level++;
+                    } else if (c == ')') {
+                        level--;
+                    }
+                }
+                queue.add(new Pair<>(inputLeft, location));
+            }
         }
-        return new Pair<>(inputLeft, location);
+        return rooms;
     }
-    static Coordinate nextRoom(Coordinate currentLocation, char c, HashMap<Coordinate, Room> rooms) {
+
+
+
+    private static Coordinate nextRoom(Coordinate currentLocation, char c, HashMap<Coordinate, Room> rooms) {
         Room currentRoom = rooms.getOrDefault(currentLocation, new Room());
         Coordinate nextLocation = getNextLocation(currentLocation, c);
         Room nextRoom = rooms.getOrDefault(nextLocation, new Room());
@@ -70,18 +107,8 @@ class Day20 {
         return nextLocation;
     }
 
-
-    static HashMap<Coordinate, Room> getAllRooms(List<String> paths) {
-        HashMap<Coordinate, Room> rooms = new HashMap<>();
-        for (String path : paths) {
-            addRooms(rooms, path);
-        }
-        return rooms;
-    }
-
-    static int findLongestDistance(HashMap<Coordinate, Room> rooms) {
+    private static int findLongestDistance(HashMap<Coordinate, Room> rooms) {
         int longestSoFar = 0;
-        Coordinate furthestAway=null;
 
         Coordinate startLocation = new Coordinate(0,0);
 
@@ -99,8 +126,6 @@ class Day20 {
                 if (rooms.get(current).getLeadsTo().isEmpty() || scanned.containsAll(rooms.get(current).getLeadsTo())) {
                     if (steps>longestSoFar) {
                         longestSoFar=steps;
-                        furthestAway=current;
-                        System.out.print("Found new end! "+furthestAway+" "+current);
                     }
                 }
                 scanned.add(current);
@@ -115,15 +140,41 @@ class Day20 {
     }
 
     static int solveA(String input) {
-        List<String> paths = getAllPaths(input);
-        HashMap<Coordinate, Room> rooms = getAllRooms(paths);
-
+        HashMap<Coordinate, Room> rooms = depthFirst(input);
         return findLongestDistance(rooms);
     }
 
-    static String solveB(String input) {
-        return "";
+    static int solveB(String input) {
+        HashMap<Coordinate, Room> rooms = depthFirst(input);
+        return rooms.size()-roomsWithinDoors(rooms, 1000);
     }
+
+    static int roomsWithinDoors(HashMap<Coordinate, Room> rooms, int limit) {
+        Coordinate startLocation = new Coordinate(0,0);
+
+        HashSet<Coordinate> queue = new HashSet<>();
+        HashSet<Coordinate> scanned = new HashSet<>();
+
+        HashSet<Coordinate> visited = new HashSet<>();
+
+        queue.add(startLocation);
+        for (int steps=0; steps<limit; steps++) {
+            HashSet<Coordinate> newToAdd  = new HashSet<>();
+
+            for (Coordinate current : queue) {
+                visited.add(current);
+                if (scanned.contains(current))
+                    continue;
+                scanned.add(current);
+                newToAdd.addAll(rooms.get(current).getLeadsTo());
+            }
+            queue.addAll(newToAdd);
+            queue.removeAll(scanned);
+        }
+
+        return visited.size();
+    }
+
     static class Room {
         HashSet<Coordinate> leadsTo = new HashSet<>();
         void addDoorTo(Coordinate other) {
