@@ -95,8 +95,6 @@ class Day20 {
         return rooms;
     }
 
-
-
     private static Coordinate nextRoom(Coordinate currentLocation, char c, HashMap<Coordinate, Room> rooms) {
         Room currentRoom = rooms.getOrDefault(currentLocation, new Room());
         Coordinate nextLocation = getNextLocation(currentLocation, c);
