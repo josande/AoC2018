@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 class Day08 {
 
     static class Node {
-        private List<Integer> metadata = new ArrayList<>();
-        private List<Node> children = new ArrayList<>();
+        final private List<Integer> metadata = new ArrayList<>();
+        final private List<Node> children = new ArrayList<>();
         private void addChild(Node node) {
             children.add(node);
         }

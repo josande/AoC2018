@@ -63,7 +63,7 @@ class Day07 {
             if (toDoList.isEmpty()) { return time; }
         }
     }
-    static void handOutNewJobs(HashMap<Character, String> toDoList, Pair<Character, Integer>[] elves, int currentTime, int baseTimEToSolve) {
+    private static void handOutNewJobs(HashMap<Character, String> toDoList, Pair<Character, Integer>[] elves, int currentTime, int baseTimEToSolve) {
         List<Character> unlockedTasks = new ArrayList<>();
         // Jobs without dependencies
         for (Map.Entry<Character, String> entry : toDoList.entrySet()) {
@@ -85,7 +85,7 @@ class Day07 {
             }
         }
     }
-    static HashMap<Character, String> removeDependencies(HashMap<Character, String> toDoList, Character c) {
+    private static HashMap<Character, String> removeDependencies(HashMap<Character, String> toDoList, Character c) {
         toDoList.forEach((key, value) -> {
             for (Map.Entry<Character, String> current : toDoList.entrySet()) {
                 current.setValue((current.getValue()).replaceAll(("" + c), ""));

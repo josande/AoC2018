@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Day07Test {
     @Test
-    public void exampleOne() {
+    void exampleOne() {
         String input="Step C must be finished before step A can begin.\n" +
                 "Step C must be finished before step F can begin.\n" +
                 "Step A must be finished before step B can begin.\n" +
@@ -20,7 +20,7 @@ class Day07Test {
         assertEquals("CABDFE", solveA(input));
     }
     @Test
-    public void exampleTwo() {
+    void exampleTwo() {
         String input="Step C must be finished before step A can begin.\n" +
                 "Step C must be finished before step F can begin.\n" +
                 "Step A must be finished before step B can begin.\n" +

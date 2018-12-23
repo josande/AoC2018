@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Day06Test {
 
     @Test
-    public void exampleOne() {
+    void exampleOne() {
         String input = "1, 1\n" +
                         "1, 6\n" +
                         "8, 3\n" +
@@ -21,7 +21,7 @@ class Day06Test {
         assertEquals(17, solveA(input));
     }
     @Test
-    public void exampleTwo() {
+    void exampleTwo() {
         String input = "1, 1\n" +
                 "1, 6\n" +
                 "8, 3\n" +

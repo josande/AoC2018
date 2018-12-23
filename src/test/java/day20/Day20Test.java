@@ -22,8 +22,8 @@ class Day20Test {
     @Test
     void example_B() {
         String input = "^NN(EW|WE)SSSS$";
-        assertEquals(2, roomsWithinDoors(depthFirst(input),1));
-        assertEquals(5, roomsWithinDoors(depthFirst(input),4));
+        assertEquals(3, roomsWithinDoors(depthFirst(input),2));
+        assertEquals(7, roomsWithinDoors(depthFirst(input),4));
     }
     @Test
     void puzzle() {

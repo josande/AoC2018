@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 class Day06 {
     static class Coordinate {       // Seems we will be doing various things with these points
-        private int x, y;
+        private final int x, y;
         private int area=0;
         private boolean isNextToWall =false;
 
@@ -28,7 +28,7 @@ class Day06 {
         }
     }
 
-    static ArrayList<Coordinate> splitInput(String input) {
+    private static ArrayList<Coordinate> splitInput(String input) {
         return Arrays.stream(input.split("\r?\n"))
                                .map(c -> new Coordinate(Integer.valueOf(c.split(", ")[0]),Integer.valueOf(c.split(", ")[1])))
                                .collect(Collectors.toCollection(ArrayList::new));
@@ -41,7 +41,7 @@ class Day06 {
         }
         return coordinates; */
     }
-    static void setAreaForCoordinate(int x, int y, List<Coordinate> coordinates, int areaSize) {
+    private static void setAreaForCoordinate(int x, int y, List<Coordinate> coordinates, int areaSize) {
         int closestDistance = 999;      // This ought to be high enough...
         int closestPoint = -1;          // Negative since 0 and above is indexes used by our points.
 
@@ -63,7 +63,7 @@ class Day06 {
             }
         }
     }
-    static int totalDistance(int x, int y, List<Coordinate> coordinates) {
+    private static int totalDistance(int x, int y, List<Coordinate> coordinates) {
         return coordinates.stream()                           // For each element in the list
                           .mapToInt(c -> c.getDistance(x,y))  // find the distance to this coordinate
                           .sum();                             // and return the sum of all the distances.

@@ -24,7 +24,7 @@ class Day13Test {
     }
 
     @Test
-    public void testSorting() {
+    void testSorting() {
         ArrayList<Cart> carts = new ArrayList<>();
         Cart a = new Cart(2,2, '<');
         Cart b = new Cart(1,1, '<');

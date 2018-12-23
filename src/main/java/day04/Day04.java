@@ -77,7 +77,7 @@ class Day04 {
     }
 
 
-    static List<Integer> getAllGuardIds (ArrayList<String[]> sleepSchedule) {
+    private static List<Integer> getAllGuardIds (ArrayList<String[]> sleepSchedule) {
         List<Integer> allGuardIds = new ArrayList<>();
         for (String[] day : sleepSchedule) {
             int guardId = Integer.valueOf(day[1]);
@@ -166,7 +166,7 @@ class Day04 {
         return sleepsTheMost;
     }
 
-    static int getMostLikelyMinuteToSleep(ArrayList<String[]> sleepSchedule, int guardID) {
+    private static int getMostLikelyMinuteToSleep(ArrayList<String[]> sleepSchedule, int guardID) {
         Integer[] sleptAt = new Integer[60];
         for(int i=0; i< 60; i++) {
             sleptAt[i]=0;
@@ -191,7 +191,7 @@ class Day04 {
         return mostCommonSleepTime;
     }
 
-    static int getMostLikelyMinuteToSleepMultipliedByGuardId(ArrayList<String[]> sleepSchedule, List<Integer> allGuardIds) {
+    private static int getMostLikelyMinuteToSleepMultipliedByGuardId(ArrayList<String[]> sleepSchedule, List<Integer> allGuardIds) {
         int guardIdWhoSleptTheMost = 0;
         int mostTimesSleptForAnyGuard = 0;
         int mostCommonSleepTimeForAnyGuard = 0;

@@ -174,14 +174,9 @@ class Day20 {
     }
 
     static class Room {
-        HashSet<Coordinate> leadsTo = new HashSet<>();
-        void addDoorTo(Coordinate other) {
-            leadsTo.add(other);
-        }
-        HashSet<Coordinate> getLeadsTo() {
-            return leadsTo;
-        }
-
+        final private HashSet<Coordinate> leadsTo = new HashSet<>();
+        void addDoorTo(Coordinate other) {leadsTo.add(other);}
+        HashSet<Coordinate> getLeadsTo() {return leadsTo;}
     }
 
 }

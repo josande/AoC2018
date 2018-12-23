@@ -30,6 +30,11 @@ public class Utils {
         return target;
     }
 
+    public static void printArray(char[][] map) {
+        for (char[] aMap : map) {
+            System.out.println(aMap);
+        }
+    }
     public static char[][] cloneArray(char[][] src) {
         int length = src.length;
         char[][] target = new char[length][src[0].length];
@@ -37,10 +42,14 @@ public class Utils {
         return target;
     }
     public static class Coordinate implements Comparable<Coordinate> {
-        int x,y;
+        final int x,y;
         public Coordinate (int x, int y) {
             this.x=x;
             this.y=y;
+        }
+        public Coordinate(String coordinate) {
+            this.x=Integer.valueOf(coordinate.split(",")[0]);
+            this.y=Integer.valueOf(coordinate.split(",")[1]);
         }
 
         public int getX() {

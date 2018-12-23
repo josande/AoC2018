@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 class Day17 {
 
-    static char[][] makeMap(String input) {
+    private static char[][] makeMap(String input) {
         HashSet<Point> walls = new HashSet<>();
 
         for (String string : input.split("\r?\n")) {
@@ -47,15 +47,7 @@ class Day17 {
         map[0][500-minX+2] = '+';
         return map;
     }
-    static void print(char[][] map) {
-        for (int y=0;y<map.length; y++) {
-            for (int x=0; x<map[y].length; x++) {
-                System.out.print(map[y][x]);
-            }
-            System.out.print("\n");
-        }
-    }
-    static char[][] updateMap(char[][] map) {
+    private static char[][] updateMap(char[][] map) {
         char[][] newMap = Arrays.copyOf(map, map.length);
         for (int y = 0; y < newMap.length-1; y++) {
             for (int x = 0; x < newMap[y].length-1; x++) {
@@ -88,21 +80,15 @@ class Day17 {
     }
     static int solveA(String input) {
         char[][] map = makeMap(input);
-//        System.out.println("start:");
-      //  print(map);
-    //    System.out.println("Add water:");
-
         char[][] mapBefore = Utils.cloneArray(map);
         map=updateMap(map);
         while(!Arrays.deepEquals(map, mapBefore)) {
             mapBefore = Utils.cloneArray(map);
             map = updateMap(map);
         }
-      //  print(map);
-        int water = countWater(map);
-        return water;
+        return countWater(map);
     }
-    static int countWater(char[][] map) {
+    private static int countWater(char[][] map) {
         int water=0;
         int minY=-1;
         for (int y = 0; y < map.length; y++) {
@@ -120,7 +106,7 @@ class Day17 {
         }
         return water;
     }
-    static int countStillWater(char[][] map) {
+    private static int countStillWater(char[][] map) {
         int water=0;
         int minY=-1;
         for (int y = 0; y < map.length; y++) {
@@ -141,20 +127,12 @@ class Day17 {
 
     static int solveB(String input) {
         char[][] map = makeMap(input);
-//        System.out.println("start:");
-        //      print(map);
-        //    System.out.println("Add water:");
-
         char[][] mapBefore = Utils.cloneArray(map);
         map=updateMap(map);;
         while(!Arrays.deepEquals(map, mapBefore)) {
             mapBefore = Utils.cloneArray(map);
             map=updateMap(map);
         }
-        //  print(map);
-        int stillWater = countStillWater(map);
-
-        return stillWater;
-
+        return countStillWater(map);
     }
 }

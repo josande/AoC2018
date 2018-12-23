@@ -59,7 +59,7 @@ class Day09 {
     private static class Marble {
         private Marble previousMarble;
         private Marble nextMarble;
-        private int value;
+        final private int value;
         Marble () {
             value=0;
             nextMarble=this;

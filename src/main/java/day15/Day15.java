@@ -15,8 +15,8 @@ class Day15 {
     static class Unit implements Comparable<Unit> {
         Coordinate coordinate;
         int hp=200;
-        int attackPower;
-        boolean isElf;
+        final int attackPower;
+        final boolean isElf;
         Unit(int x, int y, boolean isElf) {
             this.coordinate=new Coordinate(x,y);
             this.attackPower=3;

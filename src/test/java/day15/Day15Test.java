@@ -165,7 +165,7 @@ class Day15Test {
     }
 
     @Test
-    public void testFindTarget() {
+    void testFindTarget() {
         String input  = "#######\n" +
                         "#G....#\n" +
                         "#..G..#\n" +

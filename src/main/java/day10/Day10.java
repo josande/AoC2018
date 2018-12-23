@@ -11,8 +11,7 @@ class Day10 {
 
         Pair<List<Pair<Integer, Integer>>,List<Pair<Integer, Integer>>> starPositionMovement = getStarsPositionAndMovement(rows);
         int time = findTime(starPositionMovement.getKey(), starPositionMovement.getValue());
-        print(starPositionMovement.getKey(), starPositionMovement.getValue(), time);
-        return "";
+        return print(starPositionMovement.getKey(), starPositionMovement.getValue(), time);
     }
 
     private static int findTime(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements) {
@@ -35,7 +34,7 @@ class Day10 {
         }
     }
 
-    private static void print(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements, int time) {
+    private static String print(List<Pair<Integer, Integer>> coordinates, List<Pair<Integer, Integer>>  movements, int time) {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         int maxX = 0;
@@ -50,13 +49,14 @@ class Day10 {
             maxX = Math.max(maxX, x);
             maxY = Math.max(maxY, y);
         }
-
+        StringBuilder sb = new StringBuilder();
         for (int y = minY; y <= maxY; y++) {
+            sb.append("\n");
             for (int x = minX; x<=maxX; x++) {
-                System.out.print(finalPositions.contains(new Pair<>(x,y))?"#":" ");
+                sb.append(finalPositions.contains(new Pair<>(x,y))?"#":" ");
             }
-            System.out.print("\n");
         }
+        return sb.toString();
     }
 
      static int solveB(String input) {
