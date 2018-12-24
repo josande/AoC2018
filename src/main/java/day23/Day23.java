@@ -99,13 +99,13 @@ class Day23 {
         int maxMatches=0;
         maxMatches=0;
         List<Nanobot> bestProbes=new ArrayList<>();
-        int bigNumber=10000000;
         Nanobot bestProbe=null;
+        int bigNumber=100000000;
         while (bigNumber>=1) {
             bestProbes=new ArrayList<>();
-            for (int x=xMin; x<xMax; x+=bigNumber) {
-                for (int y=yMin; y<yMax; y+=bigNumber) {
-                    for (int z = zMin; z < zMax; z+=bigNumber) {
+            for (int x=xMin; x<=xMax; x+=bigNumber) {
+                for (int y=yMin; y<=yMax; y+=bigNumber) {
+                    for (int z = zMin; z <=zMax; z+=bigNumber) {
                         Nanobot probe = new Nanobot(x,y,z,0);
                         int inRangeOf=0;
                         for(Nanobot bot : allBots) {

@@ -10,11 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Day22Test {
 
     @Test
-    public void testGeologicIndex() {
-
-    }
-
-    @Test
     void example_A() {
         String input = "depth: 510\n" +
                        "target: 10,10";
@@ -30,12 +25,6 @@ class Day22Test {
         String input = "depth: 510\n" +
                        "target: 10,10";
         assertEquals(45, solveB(input));
-    }
-    @Test
-    void example_web() {
-        String input ="depth: 6969\n" +
-                      "target: 9,796";
-        assertEquals(1087, solveB(input));
     }
     @Test
     void puzzle() {

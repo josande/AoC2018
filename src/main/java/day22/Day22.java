@@ -165,39 +165,30 @@ class Day22 {
         }
     }
     static int fastestPath(State startState, State endState) {
-        State startLocation = startState;
-
         HashMap<State, Integer> queue = new HashMap<>();
         HashMap<State, Integer> scanned = new HashMap<>();
-        queue.put(startLocation, 0);
+        queue.put(startState, 0);
 
-        int fastestKnownTime=2000;
-        int iteration=0;
+        int fastestKnownTime=Integer.MAX_VALUE;
         while (!queue.isEmpty()){
-            iteration++;
-           // System.out.println(iteration+" Current queue:"+queue.size()+" Fastest time: "+fastestKnownTime);
-
             HashMap<State, Integer> newToAdd  = new HashMap<>();
             HashSet<State> toBeRemoved = new HashSet<>();
             for (State current : queue.keySet() ) {
                 int elapsedTime = queue.get(current);
                 int scannedTime=scanned.getOrDefault(current,Integer.MAX_VALUE);
-             //   System.out.println(iteration+" "+current.getCoordinate()+" "+current.getEquipment()+" "+elapsedTime);
 
-                if (current.equals(endState)) {
-                    System.out.println("Found the friend! "+iteration+" "+elapsedTime);
+                if (current.equals(endState))
                     fastestKnownTime = Math.min(fastestKnownTime, elapsedTime);
-                }
+
                 if (scannedTime <= elapsedTime)
                     continue;
 
                 for (Action action : current.getPossibleActions()) {
                     State futureState=getNextState(current, action);
-                    newToAdd.put(futureState, Math.min(queue.getOrDefault(futureState,Integer.MAX_VALUE), elapsedTime + action.getTime()));
+                    newToAdd.put(futureState, Math.min(newToAdd.getOrDefault(futureState,Integer.MAX_VALUE), elapsedTime + action.getTime()));
                 }
                 scanned.put(current, elapsedTime);
             }
-
 
             for (State nextState : newToAdd.keySet() ) {
                 if (scanned.getOrDefault(nextState,Integer.MAX_VALUE) >= newToAdd.get(nextState))
@@ -214,8 +205,6 @@ class Day22 {
                 queue.remove(tbr);
             }
         }
-        System.out.println("Scanned: "+scanned.size());
-
         return fastestKnownTime;
     }
     static State getNextState(State current, Action action) {
@@ -230,28 +219,11 @@ class Day22 {
             default: return null;
         }
     }
-    /*
-    Regions:
-    0 Rocky
-    1 Wet
-    2 Narrow
-
-    Tools:
-    None: 0
-    Climbing gear: 1
-    Torch: 2
-
-    Combinations:
-    Rocky: 1,2
-    Wet: 0,1
-    Narrow:  0,2
-    */
-
     static boolean isLegalCombo(Coordinate c, Equipment e) {
         if (c.getX()<0 || c.getY()<0) return false;
         if (getRisk(c)==0) return e == Equipment.ClimbingGear || e == Equipment.Torch;
-        if (getRisk(c)==1) return e == Equipment.Nothing || e == Equipment.ClimbingGear;
-        if (getRisk(c)==2) return e == Equipment.Nothing || e == Equipment.Torch;
+        if (getRisk(c)==1) return e == Equipment.Nothing      || e == Equipment.ClimbingGear;
+        if (getRisk(c)==2) return e == Equipment.Nothing      || e == Equipment.Torch;
         return false;
     }
 
