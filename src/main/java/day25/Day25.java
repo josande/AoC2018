@@ -42,9 +42,10 @@ class Day25 {
     }
 
     static List<Star> knownStars;
-
+    static HashSet<Integer> allConstellations;
     static int solveA(String input) {
         knownStars = new ArrayList<>();
+        allConstellations=new HashSet<>();
         int numberOfConstellations=0;
 
         for (String s : input.split("\r?\n")) {
@@ -57,48 +58,21 @@ class Day25 {
 
             Star star = new Star(x,y,z,t);
 
+            star.setConstellation(numberOfConstellations++);
+            allConstellations.add(numberOfConstellations);
 
-            for (Star otherStar : knownStars) {
-                if (otherStar.isWithinDistance(star)) {
-                    star.addConstellations(otherStar.getConstellations());
-                }
-            }
-            if (star.getConstellations().isEmpty()) {
-                numberOfConstellations++;
-                star.setConstellation(numberOfConstellations);
-            }
-
+            knownStars.stream().filter(s1->s1.isWithinDistance(star))
+                               .forEach(s1->{star.addConstellations(s1.getConstellations());});
             knownStars.add(star);
-
-        }
-        boolean runAgain=true;
-        while (runAgain) {
-            Pair<Integer, Integer> p = null;
-            for (Star star : knownStars) {
-                if (star.getConstellations().size()>1) {
-                    //if 3 and 5, set all 5's to 3
-                    List<Integer> constellations = new ArrayList<>();
-                    constellations.addAll(star.getConstellations());
-                    Collections.sort(constellations);
-
-                    p=new Pair(constellations.get(0), constellations.get(1));
-                    break;
-                }
-            }
-            if (p != null) {
-                for (Star star : knownStars) {
-                    star.changeConstellation(p.getValue(), p.getKey());
-                }
-            } else {
-                runAgain=false;
+            while (star.getConstellations().size()>1) {
+                List<Integer> constellations = new ArrayList<>(star.getConstellations());
+                allConstellations.remove(constellations.get(1));
+                knownStars.stream().filter(s1->s1.getConstellations()
+                                                 .contains(constellations.get(1)))
+                                                 .forEach(s1 ->{ s1.getConstellations().remove(constellations.get(1));
+                                                                 s1.getConstellations().add(constellations.get(0)); });
             }
         }
-        HashSet<Integer> constellationsAtTheEnd = new HashSet<>();
-
-        for (Star star : knownStars) {
-            constellationsAtTheEnd.addAll(star.getConstellations());
-        }
-
-        return constellationsAtTheEnd.size();
+        return allConstellations.size();
     }
 }
