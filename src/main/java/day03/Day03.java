@@ -33,7 +33,6 @@ class Day03 {
             int startLeft = Integer.valueOf(startPositions[0]);
             int startTop = Integer.valueOf(startPositions[1]);
 
-
             int width = Integer.valueOf(rowParts[3].split("x")[0]);
             int height = Integer.valueOf(rowParts[3].split("x")[1]);
 
@@ -53,18 +52,18 @@ class Day03 {
         }
         return overlap;
     }
-//    /Part Two
-static int solveB(String input) {
-    //string into an array
-    String[] inputRows = input.replaceAll(":","")
-                              .replaceAll("#", "")
-                              .split("\r?\n");
+    //    /Part Two
+    static int solveB(String input) {
+        //string into an array
+        String[] inputRows = input.replaceAll(":","")
+                                  .replaceAll("#", "")
+                                  .split("\r?\n");
 
-    //Create a 2D array with integers
-    HashMap<Pair<Integer, Integer>, Integer> fabric = new HashMap<>();
+        //Create a 2D array with integers
+        HashMap<Pair<Integer, Integer>, Integer> fabric = new HashMap<>();
 
-    return findNonOverlappingPattern(fabric, inputRows);
-}
+        return findNonOverlappingPattern(fabric, inputRows);
+    }
     private static int findNonOverlappingPattern(HashMap<Pair<Integer, Integer>, Integer> fabric, String[] inputRows) {
         Set<Integer> nonOverlappingPatterns = new HashSet<>();
         for(String row : inputRows) {
