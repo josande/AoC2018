@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Day25Test {
 
     @Test
-    void example_A() {
+    void example_0() {
         String input = " 0,0,0,0\n" +
                 " 3,0,0,0\n" +
                 " 0,3,0,0\n" +
@@ -19,6 +19,19 @@ class Day25Test {
                 " 9,0,0,0\n" +
                 "12,0,0,0";
         assertEquals(2, solveA(input));
+    }
+    @Test
+    void example_1() {
+        String input = " 0,0,0,0\n" +
+                " 3,0,0,0\n" +
+                " 0,3,0,0\n" +
+                " 0,0,3,0\n" +
+                " 0,0,0,3\n" +
+                " 0,0,0,6\n" +
+                " 9,0,0,0\n" +
+                "12,0,0,0\n" +
+                " 6,0,0,0";
+        assertEquals(1, solveA(input));
     }
     @Test
     void example_2() {
@@ -39,6 +52,8 @@ class Day25Test {
     void puzzle() {
         String day = "25";
         String input = new Utils().readFile("Day" + day + "Input.txt");
-        System.out.println("Day" + day + "(a): " + solveA(input));
+        int resultA = solveA(input);
+        assertEquals(370, resultA);
+        System.out.println("Day" + day + "(a): " + resultA);
     }
 }
