@@ -1,24 +1,10 @@
 package day25;
-import javafx.util.Pair;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 class Day25 {
-    private static boolean inRange(int[] star, int[] otherStar){
-        int d=0;
-        for ( int i=0; i<4; i++) { d+=Math.abs(star[i]-otherStar[i]); }
-        return d<=3;
-
-    }
     static int solveA(String input) {
         List<int[]> allStars = new ArrayList<>();
         for (String s : input.split("\r?\n")) {
@@ -41,6 +27,11 @@ class Day25 {
             }
         }
         return constellations;
+    }
+    private static boolean inRange(int[] star, int[] otherStar){
+        int d=0;
+        for ( int i=0; i<4; i++ ) { d+=Math.abs(star[i]-otherStar[i]); }
+        return d<=3;
     }
     private static List<int[]> findCloseStars(int[] star, List<int[]> allStars) {
         return allStars.stream().filter(s -> inRange(s, star)).collect(Collectors.toList());

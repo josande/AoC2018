@@ -358,7 +358,7 @@ class Day15Test {
         List<Unit> units = findAllUnits(input);
         HashSet<Coordinate> walls = mapWalls(input);
         resolveRound(units,walls);
-print(units,walls);
+
         assertEquals(new Unit(2,2,true),units.get(0));
         assertEquals(new Unit(2,5,false),units.get(1));
     }

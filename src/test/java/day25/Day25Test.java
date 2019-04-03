@@ -10,7 +10,8 @@ class Day25Test {
 
     @Test
     void example_0() {
-        String input = " 0,0,0,0\n" +
+        String input =
+                " 0,0,0,0\n" +
                 " 3,0,0,0\n" +
                 " 0,3,0,0\n" +
                 " 0,0,3,0\n" +
@@ -22,7 +23,8 @@ class Day25Test {
     }
     @Test
     void example_1() {
-        String input = " 0,0,0,0\n" +
+        String input =
+                " 0,0,0,0\n" +
                 " 3,0,0,0\n" +
                 " 0,3,0,0\n" +
                 " 0,0,3,0\n" +
@@ -35,7 +37,8 @@ class Day25Test {
     }
     @Test
     void example_2() {
-        String input="1,-1,-1,-2\n" +
+        String input=
+                "1,-1,-1,-2\n" +
                 "-2,-2,0,1\n" +
                 "0,2,1,3\n" +
                 "-2,3,-2,1\n" +

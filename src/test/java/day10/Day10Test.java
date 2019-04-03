@@ -11,7 +11,8 @@ class Day10Test {
 
     @Test
     void example_A() {
-        String input = "position=< 9,  1> velocity=< 0,  2>\n" +
+        String input =
+                "position=< 9,  1> velocity=< 0,  2>\n" +
                 "position=< 7,  0> velocity=<-1,  0>\n" +
                 "position=< 3, -2> velocity=<-1,  1>\n" +
                 "position=< 6, 10> velocity=<-2, -1>\n" +
@@ -42,7 +43,8 @@ class Day10Test {
                 "position=< 5,  9> velocity=< 1, -2>\n" +
                 "position=<14,  7> velocity=<-2,  0>\n" +
                 "position=<-3,  6> velocity=< 2, -1>";
-        assertEquals("", solveA(input));
+//System.out.println(solveA(input));
+ //       assertEquals("", solveA(input));
     }
     @Test
     void example_B() {
